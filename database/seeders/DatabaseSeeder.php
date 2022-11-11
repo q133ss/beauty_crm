@@ -4,8 +4,13 @@ namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use App\Models\Day;
+use App\Models\Record;
 use App\Models\Role;
+use App\Models\Service;
+use App\Models\ServiceCategory;
 use App\Models\Time;
+use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -146,5 +151,90 @@ class DatabaseSeeder extends Seeder
                 'time' => $time
             ]);
         }
+
+        $service_cats = [
+            'Наращивание ресниц',
+            'Маникюр'
+        ];
+
+        foreach ($service_cats as $service) {
+            ServiceCategory::create([
+                'name' => $service
+            ]);
+        }
+
+        $cat_id = ServiceCategory::where('name', 'Наращивание ресниц')->pluck('id')->first();
+        $admin_id = User::where('name','admin')->pluck('id')->first();
+
+        $services = [
+            [
+                'name' => 'Нарщивание 3д',
+                'description' => 'Наращу крутые реснички!',
+                'price' => 2000,
+                'user_id' => $admin_id,
+                'category_service_id' => $cat_id
+            ],
+            [
+                'name' => 'Классика',
+                'description' => 'Сделаю крутую классику!',
+                'price' => 1200,
+                'user_id' => $admin_id,
+                'category_service_id' => $cat_id
+            ]
+        ];
+
+        foreach ($services as $service){
+            Service::create([
+                'name' => $service['name'],
+                'description' => $service['description'],
+                'price' => $service['price'],
+                'user_id' => $service['user_id'],
+                'category_service_id' => $service['category_service_id']
+            ]);
+        }
+
+        $client_id = User::where('name', 'user')->pluck('id')->first();
+
+        $records = [
+            [
+                'user_id' => $admin_id,
+                'client_id' => $client_id,
+                'service_id' => rand(1,2),
+                'time_id' => rand(10,18),
+                'date' => new Carbon('2022-09-22')
+            ],
+            [
+                'user_id' => $admin_id,
+                'client_id' => $client_id,
+                'service_id' => rand(1,2),
+                'time_id' => rand(10,18),
+                'date' => new Carbon('2022-11-03')
+            ],
+            [
+                'user_id' => $admin_id,
+                'client_id' => $client_id,
+                'service_id' => rand(1,2),
+                'time_id' => rand(10,18),
+                'date' => new Carbon('2022-12-11')
+            ],
+            [
+                'user_id' => $admin_id,
+                'client_id' => $client_id,
+                'service_id' => rand(1,2),
+                'time_id' => rand(10,18),
+                'date' => new Carbon('2020-03-12')
+            ],
+        ];
+
+        foreach ($records as $record){
+            Record::create([
+                'user_id' => $record['user_id'],
+                'client_id' => $record['client_id'],
+                'service_id' => $record['service_id'],
+                'time_id' => $record['time_id'],
+                'date' => $record['date']
+            ]);
+        }
+
     }
 }

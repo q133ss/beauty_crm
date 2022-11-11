@@ -47,4 +47,13 @@ class User extends Authenticatable
     {
         return $this->hasOne(Role::class, 'id', 'role_id');
     }
+
+    public function getAvatar(){
+        return $this->morphOne(File::class, 'fillable')->where('category', 'avatar');
+    }
+
+    public function avatar()
+    {
+        return $this->getAvatar ? $this->getAvatar->src : '/images/no-avatar.png';
+    }
 }

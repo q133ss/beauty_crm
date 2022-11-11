@@ -20,6 +20,8 @@ return new class extends Migration
             $table->foreign('client_id')->references('id')->on('users');
             $table->foreignId('service_id');
             $table->foreignId('time_id');
+            $table->date('date');
+            $table->boolean('view')->default(false)->comment('Просмотренна или нет');
             $table->timestamps();
         });
     }
