@@ -22,7 +22,5 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 
 
 Route::middleware('permission')->group(function (){
-    Route::get('/', function (){
-        return 1;
-    });
+    Route::get('/', [App\Http\Controllers\IndexController::class, 'index']);
 });
