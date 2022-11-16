@@ -41,11 +41,11 @@
             </td>
             <td>
                 <a href="{{route('records.show', $record->id)}}" class="btn btn-info btn-sm">Смотреть</a>
-                <a href="{{route('records.edit', $record->id)}}" class="btn btn-info btn-sm">Изменить</a>
+                <a href="{{route('records.edit', $record->id)}}" class="btn btn-warning btn-sm">Изменить</a>
                 <form action="{{route('records.destroy', $record->id)}}" method="POST" style="display: inline-block">
                     @method('DELETE')
                     @csrf
-                    <button class="btn btn-info btn-sm">Удалить</button>
+                    <button class="btn btn-danger btn-sm">Отменить</button>
                 </form>
             </td>
         </tr>

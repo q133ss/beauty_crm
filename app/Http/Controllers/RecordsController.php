@@ -54,6 +54,10 @@ class RecordsController extends Controller
     public function show($id)
     {
         $record = Record::findOrFail($id);
+        if($record->view == false){
+            $record->view = true;
+            $record->save();
+        }
         return view('records.show', compact('record'));
     }
 
