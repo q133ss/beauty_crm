@@ -52,7 +52,7 @@
                                         <i class="mdi mdi-lock-outline text-primary"></i>
                                       </span>
                                     </div>
-                                    <input type="password" name="password" class="form-control form-control-lg border-left-0" id="exampleInputPassword" placeholder="Password">
+                                    <input type="password" name="password" class="form-control form-control-lg border-left-0" id="exampleInputPassword" placeholder="********">
                                 </div>
                             </div>
                             <div class="my-2 d-flex justify-content-between align-items-center">

@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 Auth::routes();
+Auth::routes(['verify' => true]);
 
 Route::get('logout', function (){
     Auth::logout();
@@ -21,8 +22,8 @@ Route::get('logout', function (){
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
 
-Route::middleware('permission')->group(function (){
+Route::middleware('permission')->middleware('verified')->group(function (){
     Route::get('/', [App\Http\Controllers\IndexController::class, 'index']);
-    Route::get('/records', [App\Http\Controllers\RecordsController::class, 'index']);
     Route::post('/records/filter', [App\Http\Controllers\RecordsController::class, 'filter']);
+    Route::resource('records', App\Http\Controllers\RecordsController::class);
 });
