@@ -13,15 +13,9 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('records', function (Blueprint $table) {
+        Schema::create('record_statuses', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id');
-            $table->unsignedBigInteger('client_id');
-            $table->foreign('client_id')->references('id')->on('users');
-            $table->foreignId('service_id');
-            $table->foreignId('time_id');
-            $table->date('date');
-            $table->foreignId('record_status_id')->default(1);
+            $table->string('name');
             $table->timestamps();
         });
     }
@@ -33,6 +27,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('records');
+        Schema::dropIfExists('record_statuses');
     }
 };

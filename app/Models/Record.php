@@ -13,13 +13,18 @@ class Record extends Model
 
     protected $guarded = [];
 
-    public function scopeWithFilter($query, $filter = 'is_actual')
+    public function scopeWithFilter($query, $filter = 1)
     {
-        switch ($filter) {
-            case 'is_actual':
-                $query->where('date', '>=', Carbon::now())->orderBy('date', 'DESC');
-            default:
-                $query->orderBy('date', 'DESC');
+        $filters = [
+            'all',
+            'processed'
+        ];
+        if(!in_array($filter, $filters)){
+            $query->where('record_status_id', $filter)->orderBy('date', 'DESC');
+        }elseif($filter == 'all'){
+            $query->orderBy('date','DESC');
+        }elseif($filter == 'processed'){
+            $query->where('record_status_id', '!=', 1)->orderBy('date', 'DESC');
         }
         return $query;
     }
@@ -40,16 +45,13 @@ class Record extends Model
         return $this->hasOne(Time::class, 'id', 'time_id');
     }
 
-    public function isView()
-    {
-        if($this->view == true)
-            return true;
-
-        return false;
-    }
-
     public function service()
     {
         return $this->hasOne(Service::class, 'id', 'service_id');
+    }
+
+    public function status()
+    {
+        return $this->hasOne(RecordStatus::class, 'id', 'record_status_id');
     }
 }

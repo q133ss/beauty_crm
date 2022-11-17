@@ -16,6 +16,8 @@ return new class extends Migration
         Schema::table('users', function (Blueprint $table) {
             $table->foreignId('role_id')->default(3);
             $table->dateTime('end_subscription')->nullable();
+            $table->boolean('is_salon')->default(false);
+            $table->string('note')->nullable();
         });
     }
 

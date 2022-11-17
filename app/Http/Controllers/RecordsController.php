@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\RecordsController\StatusRequest;
 use App\Models\Record;
+use App\Services\Records\StatusService;
 use Illuminate\Http\Request;
 
 class RecordsController extends Controller
@@ -14,7 +16,7 @@ class RecordsController extends Controller
      */
     public function index()
     {
-        $records = Record::withFilter('is_actual')->get();
+        $records = Record::withFilter(1)->get();
         return view('records.index', compact('records'));
     }
 
@@ -22,6 +24,11 @@ class RecordsController extends Controller
     {
         $records = Record::withFilter($request->field)->get();
         return view('ajax.records.index', compact('records'));
+    }
+
+    public function status(StatusRequest $request)
+    {
+        return StatusService::statusChange($request->validated());
     }
 
     /**
@@ -54,10 +61,7 @@ class RecordsController extends Controller
     public function show($id)
     {
         $record = Record::findOrFail($id);
-        if($record->view == false){
-            $record->view = true;
-            $record->save();
-        }
+
         return view('records.show', compact('record'));
     }
 
@@ -69,7 +73,8 @@ class RecordsController extends Controller
      */
     public function edit($id)
     {
-        //
+        $record = Record::findOrFail($id);
+        return view('records.edit', compact('record'));
     }
 
     /**
@@ -81,7 +86,7 @@ class RecordsController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        //При изменении услуги отправляем клиенту уведомление
     }
 
     /**

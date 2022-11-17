@@ -5,6 +5,7 @@ namespace Database\Seeders;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use App\Models\Day;
 use App\Models\Record;
+use App\Models\RecordStatus;
 use App\Models\Role;
 use App\Models\Service;
 use App\Models\ServiceCategory;
@@ -38,6 +39,7 @@ class DatabaseSeeder extends Seeder
             'name' => 'admin',
             'email' => 'admin@email.net',
             'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi',
+            'email_verified_at' => Carbon::now(),
             'role_id' => Role::where('name', 'admin')->pluck('id')->first()
         ]);
 
@@ -194,6 +196,18 @@ class DatabaseSeeder extends Seeder
         }
 
         $client_id = User::where('name', 'user')->pluck('id')->first();
+
+        $record_statuses = [
+            'not_processed',
+            'confirmed',
+            'rejected'
+        ];
+
+        foreach ($record_statuses as $status){
+            RecordStatus::create([
+                'name' => $status
+            ]);
+        }
 
         $records = [
             [

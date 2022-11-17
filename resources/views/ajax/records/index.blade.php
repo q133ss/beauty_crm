@@ -5,20 +5,17 @@
         <td>{{$record->date}}</td>
         <td>{{$record->time->time}}</td>
         <td>
-            @if($record->isView())
-                <label class="badge badge-info">Просмотрена</label>
+            @if($record->status->name == 'confirmed')
+                <label class="badge badge-success">Подтвержден</label>
+            @elseif($record->status->name == 'rejected')
+                <label class="badge badge-danger">Отклонен</label>
             @else
-                <label class="badge badge-success">Новая</label>
+                <label class="badge badge-info">Не обработан</label>
             @endif
         </td>
         <td>
             <a href="{{route('records.show', $record->id)}}" class="btn btn-info btn-sm">Смотреть</a>
-            <a href="{{route('records.edit', $record->id)}}" class="btn btn-info btn-sm">Изменить</a>
-            <form action="{{route('records.destroy', $record->id)}}" method="POST" style="display: inline-block">
-                @method('DELETE')
-                @csrf
-                <button class="btn btn-info btn-sm">Удалить</button>
-            </form>
+            <a href="{{route('records.edit', $record->id)}}" class="btn btn-warning btn-sm">Изменить</a>
         </td>
     </tr>
 @endforeach

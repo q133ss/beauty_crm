@@ -1,6 +1,6 @@
 <ul class="nav">
     <li class="nav-item">
-        <a class="nav-link" href="index.html">
+        <a class="nav-link" href="/">
             <i class="icon-box menu-icon"></i>
             <span class="menu-title">Главная</span>
         </a>
@@ -14,7 +14,7 @@
     </li>
 
     <li class="nav-item">
-        <a class="nav-link" href="index.html">
+        <a class="nav-link" href="{{route('records.index')}}">
             <i class="icon-box menu-icon"></i>
             <span class="menu-title">Записи</span>
         </a>
@@ -24,6 +24,13 @@
         <a class="nav-link" href="index.html">
             <i class="icon-box menu-icon"></i>
             <span class="menu-title">База клиентов</span>
+        </a>
+    </li>
+
+    <li class="nav-item">
+        <a class="nav-link" href="index.html">
+            <i class="icon-box menu-icon"></i>
+            <span class="menu-title">Салон</span>
         </a>
     </li>
 

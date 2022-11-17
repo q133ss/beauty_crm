@@ -9,7 +9,10 @@
 
         <div class="col" style="align-self: center">
             <select name="" style="align-self: center" onchange="filter($(this).val())" class="form-control" id="">
-                <option value="is_actual" selected>Только новые</option>
+                <option value="1" selected>Необработанные</option>
+                <option value="processed">Обработанные</option>
+                <option value="2">Подтвержденные</option>
+                <option value="3">Откланенные</option>
                 <option value="all">Все</option>
             </select>
         </div>
@@ -33,20 +36,17 @@
             <td>{{$record->date}}</td>
             <td>{{$record->time->time}}</td>
             <td>
-                @if($record->isView())
-                    <label class="badge badge-info">Просмотрена</label>
+                @if($record->status == 'confirmed')
+                    <label class="badge badge-success">Подтвержден</label>
+                @elseif($record->status == 'rejected')
+                    <label class="badge badge-danger">Отклонен</label>
                 @else
-                    <label class="badge badge-success">Новая</label>
+                    <label class="badge badge-info">Не обработан</label>
                 @endif
             </td>
             <td>
                 <a href="{{route('records.show', $record->id)}}" class="btn btn-info btn-sm">Смотреть</a>
                 <a href="{{route('records.edit', $record->id)}}" class="btn btn-warning btn-sm">Изменить</a>
-                <form action="{{route('records.destroy', $record->id)}}" method="POST" style="display: inline-block">
-                    @method('DELETE')
-                    @csrf
-                    <button class="btn btn-danger btn-sm">Отменить</button>
-                </form>
             </td>
         </tr>
         @endforeach
