@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\RecordsController\StatusRequest;
+use App\Http\Requests\RecordsController\UpdateRequest;
 use App\Models\Record;
 use App\Services\Records\StatusService;
 use Illuminate\Http\Request;
@@ -84,9 +85,16 @@ class RecordsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(UpdateRequest $request, $id)
     {
-        //При изменении услуги отправляем клиенту уведомление
+        //TODO При сохранении нужно добавить евент для форматирования даты!!!
+        //TODO При изменении услуги отправляем клиенту уведомление
+        $record = Record::findOrFail($id);
+        if($record->user_id != Auth()->id()){
+            abort(403, 'У вас нет прав');
+        }
+        $record->update($request->validated());
+        return to_route('records.index')->withSuccess('Запись успешно обновлена');
     }
 
     /**

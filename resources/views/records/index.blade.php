@@ -5,6 +5,13 @@
 @endsection
 @section('content')
     <div class="row col">
+        <div class="alert alert-info alert-dismissible fade show" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            На этой странице отображены все заявки от клиентов на ваши услуги.
+            Вы можете воспользоваться поиском, а также отфильтровать и отсортировать их
+        </div>
         <a href="{{route('records.create')}}" class="btn btn-success" style="align-self: center">Добавить</a>
 
         <div class="col" style="align-self: center">
@@ -12,7 +19,7 @@
                 <option value="1" selected>Необработанные</option>
                 <option value="processed">Обработанные</option>
                 <option value="2">Подтвержденные</option>
-                <option value="3">Откланенные</option>
+                <option value="3">Отклоненные</option>
                 <option value="all">Все</option>
             </select>
         </div>
@@ -33,8 +40,8 @@
         <tr>
             <td>{{$record->id}}</td>
             <td><a href="#">{{$record->client->name}}</a></td>
-            <td>{{$record->date}}</td>
-            <td>{{$record->time->time}}</td>
+            <td>{{$record->getDate()}}</td>
+            <td>{{$record->timeFormatted()}}</td>
             <td>
                 @if($record->status == 'confirmed')
                     <label class="badge badge-success">Подтвержден</label>

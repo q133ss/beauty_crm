@@ -74,86 +74,6 @@ class DatabaseSeeder extends Seeder
             ]);
         }
 
-        $times = [
-            '00:00',
-            '00:30',
-
-            '01:00',
-            '01:30',
-
-            '02:00',
-            '02:30',
-
-            '03:00',
-            '03:30',
-
-            '04:00',
-            '04:30',
-
-            '05:00',
-            '05:30',
-
-            '06:00',
-            '06:30',
-
-            '07:00',
-            '07:30',
-
-            '08:00',
-            '08:30',
-
-            '09:00',
-            '09:30',
-
-            '10:00',
-            '10:30',
-
-            '11:00',
-            '11:30',
-
-            '12:00',
-            '12:30',
-
-            '13:00',
-            '13:30',
-
-            '14:00',
-            '14:30',
-
-            '15:00',
-            '15:30',
-
-            '16:00',
-            '16:30',
-
-            '17:00',
-            '17:30',
-
-            '18:00',
-            '18:30',
-
-            '19:00',
-            '19:30',
-
-            '20:00',
-            '20:30',
-
-            '21:00',
-            '21:30',
-
-            '22:00',
-            '22:30',
-
-            '23:00',
-            '23:30'
-        ];
-
-        foreach ($times as $time){
-            Time::create([
-                'time' => $time
-            ]);
-        }
-
         $service_cats = [
             'Наращивание ресниц',
             'Маникюр'
@@ -173,6 +93,7 @@ class DatabaseSeeder extends Seeder
                 'name' => 'Нарщивание 3д',
                 'description' => 'Наращу крутые реснички!',
                 'price' => 2000,
+                'work_time' => '03:00',
                 'user_id' => $admin_id,
                 'category_service_id' => $cat_id
             ],
@@ -180,6 +101,7 @@ class DatabaseSeeder extends Seeder
                 'name' => 'Классика',
                 'description' => 'Сделаю крутую классику!',
                 'price' => 1200,
+                'work_time' => '02:00',
                 'user_id' => $admin_id,
                 'category_service_id' => $cat_id
             ]
@@ -191,6 +113,7 @@ class DatabaseSeeder extends Seeder
                 'description' => $service['description'],
                 'price' => $service['price'],
                 'user_id' => $service['user_id'],
+                'work_time' => $service['work_time'],
                 'category_service_id' => $service['category_service_id']
             ]);
         }
@@ -214,28 +137,28 @@ class DatabaseSeeder extends Seeder
                 'user_id' => $admin_id,
                 'client_id' => $client_id,
                 'service_id' => rand(1,2),
-                'time_id' => rand(10,18),
+                'time' => Carbon::now(),
                 'date' => new Carbon('2022-09-22')
             ],
             [
                 'user_id' => $admin_id,
                 'client_id' => $client_id,
                 'service_id' => rand(1,2),
-                'time_id' => rand(10,18),
+                'time' => Carbon::now(),
                 'date' => new Carbon('2022-11-03')
             ],
             [
                 'user_id' => $admin_id,
                 'client_id' => $client_id,
                 'service_id' => rand(1,2),
-                'time_id' => rand(10,18),
+                'time' => Carbon::now(),
                 'date' => new Carbon('2022-12-11')
             ],
             [
                 'user_id' => $admin_id,
                 'client_id' => $client_id,
                 'service_id' => rand(1,2),
-                'time_id' => rand(10,18),
+                'time' => Carbon::now(),
                 'date' => new Carbon('2020-03-12')
             ],
         ];
@@ -245,7 +168,7 @@ class DatabaseSeeder extends Seeder
                 'user_id' => $record['user_id'],
                 'client_id' => $record['client_id'],
                 'service_id' => $record['service_id'],
-                'time_id' => $record['time_id'],
+                'time' => $record['time'],
                 'date' => $record['date']
             ]);
         }

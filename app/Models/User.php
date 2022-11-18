@@ -58,4 +58,9 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->getAvatar ? $this->getAvatar->src : '/images/no-avatar.png';
     }
+
+    public function salon()
+    {
+        return $this->belongsToMany(Salon::class);
+    }
 }

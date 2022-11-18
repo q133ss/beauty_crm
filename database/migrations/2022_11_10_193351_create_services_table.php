@@ -20,6 +20,7 @@ return new class extends Migration
             $table->double('price');
             $table->unsignedBigInteger('parent_id')->nullable();
             $table->boolean('prepayment')->default(false);
+            $table->time('work_time')->comment('Время на выполнение услуги');
             $table->foreignId('user_id');
             $table->foreignId('category_service_id');
             $table->timestamps();

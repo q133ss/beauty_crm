@@ -19,7 +19,7 @@ return new class extends Migration
             $table->unsignedBigInteger('client_id');
             $table->foreign('client_id')->references('id')->on('users');
             $table->foreignId('service_id');
-            $table->foreignId('time_id');
+            $table->time('time');
             $table->date('date');
             $table->foreignId('record_status_id')->default(1);
             $table->timestamps();

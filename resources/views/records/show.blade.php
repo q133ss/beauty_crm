@@ -4,7 +4,8 @@
     <ul class="list-arrow">
         <li>Клиент: <a href="#">{{$record->client->name}}</a></li>
         <li>Услуга: <a href="#">{{$record->service->name}}</a></li>
-        <li>Дата и время: <date class="font-weight-bold">{{$record->date}} : {{$record->time->time}}</date><i class="fa fa-calendar ml-1 text-primary"></i></li>
+        <li>Время работы: {{$record->service->workTime()}}</li>
+        <li>Дата и время проведения процедуры: <date class="font-weight-bold">{{$record->date()}} в {{$record->timeFormatted()}}</date><i class="fa fa-calendar ml-1 text-primary"></i></li>
     </ul>
     <button class="btn btn-info">Связаться с клиентом</button>
     <form action="{{route('records.status')}}" method="POST" class="d-inline">
