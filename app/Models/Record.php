@@ -19,12 +19,13 @@ class Record extends Model
             'all',
             'processed'
         ];
+        $recordsIds = Auth()->user()->recordsIds();
         if(!in_array($filter, $filters)){
-            $query->where('record_status_id', $filter)->orderBy('date', 'DESC');
+            $query->whereIn('id', $recordsIds)->where('record_status_id', $filter)->orderBy('date', 'DESC');
         }elseif($filter == 'all'){
-            $query->orderBy('date','DESC');
+            $query->whereIn('id', $recordsIds)->orderBy('date','DESC');
         }elseif($filter == 'processed'){
-            $query->where('record_status_id', '!=', 1)->orderBy('date', 'DESC');
+            $query->whereIn('id', $recordsIds)->where('record_status_id', '!=', 1)->orderBy('date', 'DESC');
         }
         return $query;
     }
@@ -91,9 +92,6 @@ class Record extends Model
 
     public function checkUser()
     {
-        //Получаем слон
-        //Проверяем юзера на принадлежность к салону
-        //и все
         return $this->join('salons','salons.id','records.salon_id')
                     ->where('records.id', $this->id)
                     ->join('user_salon', 'user_salon.salon_id', 'salons.id')

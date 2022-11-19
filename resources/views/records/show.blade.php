@@ -13,7 +13,7 @@
             @csrf
             <input type="hidden" name="id" value="{{$record->id}}">
             <input type="hidden" name="status_id" value="3">
-            <p class="text-success">Вы подтвердите эту запись <button type="submit" class="btn btn-link btn-fw">Отменить запись</button> </p>
+            <p class="text-success">Вы подтвердили эту запись <button type="submit" class="btn btn-link btn-fw">Отменить запись</button> </p>
         </form>
     @elseif($record->status->name == 'rejected')
         <form action="{{route('records.status')}}" method="POST" class="d-inline">

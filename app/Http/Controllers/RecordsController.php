@@ -18,7 +18,9 @@ class RecordsController extends Controller
     public function index()
     {
         $recordsIds = Auth()->user()->recordsIds();
-        $records = Record::whereIn('id', $recordsIds)->get();
+        $filter = Record::whereIn('id', $recordsIds)->withFilter(1)->exists() ? 1 : 2;
+        $records = Record::whereIn('id', $recordsIds)->withFilter($filter)->get();
+
         return view('records.index', compact('records'));
     }
 
