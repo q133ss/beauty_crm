@@ -16,9 +16,9 @@
 
         <div class="col" style="align-self: center">
             <select name="" style="align-self: center" onchange="filter($(this).val())" class="form-control" id="">
-                <option value="1" selected>Необработанные</option>
+                <option value="1" @if($filter == 1) selected @endif>Необработанные</option>
                 <option value="processed">Обработанные</option>
-                <option value="2">Подтвержденные</option>
+                <option value="2" @if($filter == 2) selected @endif>Подтвержденные</option>
                 <option value="3">Отклоненные</option>
                 <option value="all">Все</option>
             </select>

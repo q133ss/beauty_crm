@@ -21,7 +21,7 @@ class RecordsController extends Controller
         $filter = Record::whereIn('id', $recordsIds)->withFilter(1)->exists() ? 1 : 2;
         $records = Record::whereIn('id', $recordsIds)->withFilter($filter)->get();
 
-        return view('records.index', compact('records'));
+        return view('records.index', compact('records','filter'));
     }
 
     public function filter(Request $request)
