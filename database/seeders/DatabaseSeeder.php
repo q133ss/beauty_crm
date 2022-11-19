@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use App\Models\Day;
+use App\Models\Order;
 use App\Models\Record;
 use App\Models\RecordStatus;
 use App\Models\Role;
@@ -94,12 +95,14 @@ class DatabaseSeeder extends Seeder
 
         $salons = [
             [
+                'name' => 'Салон 1',
                 'work_days' => json_encode([1,2,3,4,5]),
                 'description' => 'S Class Beauty — это многопрофильный центр с панорамным видом на воронежское водохранилище, где вам предоставят полный спектр услуг красоты.',
                 'prepayment' => true,
                 'percent' => 15
             ],
             [
+                'name' => 'Бьюти сервис',
                 'work_days' => json_encode([1,2,3,4,5]),
                 'description' => 'Философия Green SPA — это совершеннейшая гармония человека и природы. Основа нашей методики строится на балансе духовного и физического начала, который невозможен без правильного питания и благостного образа мыслей. Здесь, в Green SPA, мы строим мост между внутренним и внешним миром посредством огромного спектра процедур и услуг, направленных на очищение организма и релаксацию.',
                 'prepayment' => false
@@ -108,6 +111,7 @@ class DatabaseSeeder extends Seeder
 
         foreach ($salons as $salon){
             Salon::create([
+                'name' => $salon['name'],
                 'work_days' => $salon['work_days'],
                 'description' => $salon['description'],
                 'prepayment' => $salon['prepayment']
@@ -252,5 +256,24 @@ class DatabaseSeeder extends Seeder
             'post_id' => 1
         ]);
 
+        //Order
+        Order::create([
+            'service_name' => 'Услуга',
+            'price' => 111,
+            'date' => Carbon::now(),
+            'time' => '11:22',
+            'status' => 2,
+            'client_id' => 3,
+            'salon_id' => 1,
+            'service_id' => 2,
+            'prepayment' => false,
+            'prepayment_percentage' => 0
+        ]);
+
+        DB::table('user_order')->insert([
+            'salon_id' => 1,
+            'user_id' => 3,
+            'order_id' => 1
+        ]);
     }
 }

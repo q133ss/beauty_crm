@@ -90,4 +90,17 @@ class User extends Authenticatable implements MustVerifyEmail
                     ->select('services.*')
                     ->get();
     }
+
+    public function clients()
+    {
+        $client_ids = $this->join('user_salon', 'user_salon.id', 'users.id')
+                    ->where('users.id', $this->id)
+                    ->join('salons', 'salons.id', 'user_salon.salon_id')
+                    ->join('user_order', 'user_order.salon_id', 'salons.id')
+                    ->join('orders', 'orders.id', 'user_order.order_id')
+                    ->pluck('orders.client_id')
+                    ->all();
+
+        return $this->whereIn('id', $client_ids)->get();
+    }
 }

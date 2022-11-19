@@ -49,7 +49,7 @@
             overlayButton: "Готово",
             formatter: (input, date, instance) => {
                 var d = date.getDate();
-                var m = date.getMonth() + 1; //Month from 0 to 11
+                var m = date.getMonth() + 1;
                 var y = date.getFullYear();
                 input.value = '' + y + '-' + (m<=9 ? '0' + m : m) + '-' + (d <= 9 ? '0' + d : d);
             },

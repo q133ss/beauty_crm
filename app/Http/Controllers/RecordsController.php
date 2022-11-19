@@ -3,9 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\RecordsController\StatusRequest;
+use App\Http\Requests\RecordsController\StoreRequest;
 use App\Http\Requests\RecordsController\UpdateRequest;
 use App\Models\Record;
+use App\Models\User;
 use App\Services\Records\StatusService;
+use App\Services\Records\StoreService;
 use Illuminate\Http\Request;
 
 class RecordsController extends Controller
@@ -42,8 +45,11 @@ class RecordsController extends Controller
      */
     public function create()
     {
-        $services = Auth()->user()->services();
-        return view('records.create', compact('services'));
+        $user = Auth()->user();
+        $services = $user->services();
+        $clients = $user->clients();
+        $salons = $user->salon;
+        return view('records.create', compact('services', 'clients', 'salons'));
     }
 
     /**
@@ -52,10 +58,10 @@ class RecordsController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreRequest $request)
     {
-        return back();
-        dd($request);
+        StoreService::store($request->validated());
+        return to_route('records.index')->withSuccess('Заявка успешно создана');
     }
 
     /**

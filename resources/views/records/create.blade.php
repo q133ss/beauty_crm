@@ -36,13 +36,22 @@
             </select>
         </div>
 
+        <div class="form-group">
+            <label for="salon">Салон</label>
+            <select class="form-control" name="salon_id" id="salon">
+                @foreach($salons as $salon)
+                    <option value="{{$salon->id}}">{{$salon->name}}</option>
+                @endforeach
+            </select>
+        </div>
+
 
         <h5>Клиент</h5>
 
         <div class="form-group">
             <div class="form-check">
                 <label for="old_client">
-                    <input type="radio" id="old_client" value="old" name="choice-client" onchange="changeClientType('old')">
+                    <input type="radio" id="old_client" value="old" selected name="choice-client" onchange="changeClientType('old')">
                     Выбрать существующего
                 </label>
             </div>
@@ -53,18 +62,26 @@
         </div>
 
 
-        <div class="form-group" id="old-client-form" @if(old('choice-client') != 'old') style="display:none;" @endif>
+        <div class="form-group" id="old-client-form">
             <label>Выберите клиента</label>
             <select name="client_id" class="form-control" id="">
-                <option value="1">Клиент 1</option>
+                @foreach($clients as $client)
+                    <option value="{{$client->id}}">{{$client->name}}</option>
+                @endforeach
             </select>
         </div>
 
         <div id="new-client-form" @if(old('choice-client') != 'new') style="display:none;" @endif>
             <div class="form-group">
+                <label for="name">Имя</label>
+                <input type="text" name="name" class="form-control" value="{{old('name')}}">
+            </div>
+
+            <div class="form-group">
                 <label for="email">Email</label>
                 <input type="email" name="email" class="form-control" value="{{old('email')}}">
             </div>
+
             <div class="form-group">
                 <label for="tg">Telegram (Не обязательно)</label>
                 <input class="form-control" type="text" id="tg" value="{{old('telegram')}}" name="telegram">
@@ -78,6 +95,11 @@
             <div class="form-group">
                 <label for="phone">Телефон (Не обязательно)</label>
                 <input class="form-control" type="text" id="phone" value="{{old('phone')}}" name="phone">
+            </div>
+
+            <div class="form-group">
+                <label for="note">Заметка (Не обязательно)</label>
+                <input class="form-control" type="text" id="note" value="{{old('note')}}" name="note">
             </div>
 
             <div class="form-group">
