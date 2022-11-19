@@ -20,7 +20,8 @@
 
         <div class="form-group">
             <label>Дата</label>
-            <input type="text" class="form-control form-control-sm date-input" value="{{$record->getDate()}}" placeholder="" name="date">
+            <div class="form-control form-control-sm date-input" id="date-text">{{$record->getDate()}}</div>
+            <input type="hidden" id="date-input" class="form-control form-control-sm" value="{{$record->getDate()}}" placeholder="" name="date">
         </div>
 
         <div class="form-group">
@@ -29,8 +30,12 @@
         </div>
 
         <div class="form-group">
-            <label>Услуга</label>
-            <input type="text" name="service_id" class="form-control form-control-sm" placeholder="Пока что так))">
+            <label for="service">Услуга</label>
+            <select name="service_id" class="form-control" id="service">
+                @foreach($services as $service)
+                    <option value="{{$service->id}}">{{$service->name}}</option>
+                @endforeach
+            </select>
         </div>
         <button class="btn btn-info">Сохранить</button>
     </form>
@@ -47,6 +52,13 @@
                 var m = date.getMonth() + 1; //Month from 0 to 11
                 var y = date.getFullYear();
                 input.value = '' + y + '-' + (m<=9 ? '0' + m : m) + '-' + (d <= 9 ? '0' + d : d);
+            },
+            onSelect: (instance, date) => {
+                var d = date.getDate();
+                var m = date.getMonth() + 1; //Month from 0 to 11
+                var y = date.getFullYear();
+                $('#date-text').text('' + (d <= 9 ? '0' + d : d) + '-' + (m<=9 ? '0' + m : m) + '-' + y);
+                $('#date-input').val('' + y + '-' + (m<=9 ? '0' + m : m) + '-' + (d <= 9 ? '0' + d : d));
             }
         })
     </script>

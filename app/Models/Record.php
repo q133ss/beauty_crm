@@ -55,18 +55,18 @@ class Record extends Model
     public function date()
     {
         $months = [
-            1 => 'января',
-            2 => 'февраля',
-            3 => 'марта',
-            4 => 'апреля',
-            5 => 'мая',
-            6 => 'июня',
-            7 => 'июля',
-            8 => 'августа',
-            9 => 'сентября',
-            10 => 'октября',
-            11 => 'ноября',
-            12 => 'декабря'
+            '01' => 'января',
+            '02' => 'февраля',
+            '03' => 'марта',
+            '04' => 'апреля',
+            '05' => 'мая',
+            '06' => 'июня',
+            '07' => 'июля',
+            '08' => 'августа',
+            '09' => 'сентября',
+            '10' => 'октября',
+            '11' => 'ноября',
+            '12' => 'декабря'
         ];
 
         $day = Carbon::parse($this->date)->format('j');
@@ -82,5 +82,22 @@ class Record extends Model
         $month = Carbon::parse($this->date)->format('m');
         $year = Carbon::parse($this->date)->format('Y');
         return $day .'.'. $month .'.'. $year;
+    }
+
+    public function salon()
+    {
+        return $this->hasOne(Salon::class, 'id', 'salon_id');
+    }
+
+    public function checkUser()
+    {
+        //Получаем слон
+        //Проверяем юзера на принадлежность к салону
+        //и все
+        return $this->join('salons','salons.id','records.salon_id')
+                    ->where('records.id', $this->id)
+                    ->join('user_salon', 'user_salon.salon_id', 'salons.id')
+                    ->where('user_salon.user_id', Auth()->id())
+                    ->exists();
     }
 }

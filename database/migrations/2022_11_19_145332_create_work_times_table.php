@@ -13,16 +13,13 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('services', function (Blueprint $table) {
+        Schema::create('work_times', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->text('description');
-            $table->double('price');
-            $table->unsignedBigInteger('parent_id')->nullable();
-            $table->boolean('prepayment')->default(false);
-            $table->time('work_time')->comment('Время на выполнение услуги');
+            $table->foreignId('day_id');
             $table->foreignId('salon_id');
-            $table->foreignId('category_service_id');
+            $table->time('start')->comment('Начало рабочего дня');
+            $table->time('end')->comment('Конец рабочего дня');
+            $table->json('breaks')->nullable();
             $table->timestamps();
         });
     }
@@ -34,6 +31,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('services');
+        Schema::dropIfExists('work_times');
     }
 };

@@ -15,7 +15,8 @@ return new class extends Migration
     {
         Schema::create('records', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id');
+            $table->foreignId('user_id')->comment('Что бы было видно, какой мастер делал заказ');
+            $table->foreignId('salon_id')->comment('Какой салон');
             $table->unsignedBigInteger('client_id');
             $table->foreign('client_id')->references('id')->on('users');
             $table->foreignId('service_id');

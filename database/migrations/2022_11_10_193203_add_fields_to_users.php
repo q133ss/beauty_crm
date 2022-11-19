@@ -18,6 +18,7 @@ return new class extends Migration
             $table->dateTime('end_subscription')->nullable();
             $table->boolean('is_salon')->default(false);
             $table->string('note')->nullable();
+            $table->json('socials')->nullable();
         });
     }
 

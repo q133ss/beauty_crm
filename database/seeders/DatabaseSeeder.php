@@ -7,12 +7,16 @@ use App\Models\Day;
 use App\Models\Record;
 use App\Models\RecordStatus;
 use App\Models\Role;
+use App\Models\Salon;
 use App\Models\Service;
 use App\Models\ServiceCategory;
+use App\Models\StuffPost;
 use App\Models\Time;
 use App\Models\User;
+use App\Models\WorkTime;
 use Carbon\Carbon;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 
 class DatabaseSeeder extends Seeder
 {
@@ -88,13 +92,52 @@ class DatabaseSeeder extends Seeder
         $cat_id = ServiceCategory::where('name', 'Наращивание ресниц')->pluck('id')->first();
         $admin_id = User::where('name','admin')->pluck('id')->first();
 
+        $salons = [
+            [
+                'work_days' => json_encode([1,2,3,4,5]),
+                'description' => 'S Class Beauty — это многопрофильный центр с панорамным видом на воронежское водохранилище, где вам предоставят полный спектр услуг красоты.',
+                'prepayment' => true,
+                'percent' => 15
+            ],
+            [
+                'work_days' => json_encode([1,2,3,4,5]),
+                'description' => 'Философия Green SPA — это совершеннейшая гармония человека и природы. Основа нашей методики строится на балансе духовного и физического начала, который невозможен без правильного питания и благостного образа мыслей. Здесь, в Green SPA, мы строим мост между внутренним и внешним миром посредством огромного спектра процедур и услуг, направленных на очищение организма и релаксацию.',
+                'prepayment' => false
+            ]
+        ];
+
+        foreach ($salons as $salon){
+            Salon::create([
+                'work_days' => $salon['work_days'],
+                'description' => $salon['description'],
+                'prepayment' => $salon['prepayment']
+            ]);
+        }
+
+        //salon times
+        $getSalons = Salon::get();
+        foreach ($getSalons as $salon) {
+            foreach ($salon->workDays() as $day) {
+                WorkTime::create([
+                    'day_id' => $day,
+                    'salon_id' => $salon->id,
+                    'start' => Carbon::createFromFormat('H:i', '09:00'),
+                    'end' => Carbon::createFromFormat('H:i', '18:00'),
+                    'breaks' => json_encode([
+                        Carbon::createFromFormat('H:i', '12:00').'-'.Carbon::createFromFormat('H:i', '13:00'),
+                        Carbon::createFromFormat('H:i', '15:00').'-'.Carbon::createFromFormat('H:i', '15:10')
+                    ])
+                ]);
+            }
+        }
+
         $services = [
             [
                 'name' => 'Нарщивание 3д',
                 'description' => 'Наращу крутые реснички!',
                 'price' => 2000,
                 'work_time' => '03:00',
-                'user_id' => $admin_id,
+                'salon_id' => rand(1,2),
                 'category_service_id' => $cat_id
             ],
             [
@@ -102,7 +145,16 @@ class DatabaseSeeder extends Seeder
                 'description' => 'Сделаю крутую классику!',
                 'price' => 1200,
                 'work_time' => '02:00',
-                'user_id' => $admin_id,
+                'salon_id' => 1,
+                'category_service_id' => $cat_id
+            ],
+            [
+                'name' => 'Снять классику',
+                'description' => 'Снямим классику!',
+                'price' => 100,
+                'work_time' => '00:10',
+                'salon_id' => 1,
+                'parent_id' => 2,
                 'category_service_id' => $cat_id
             ]
         ];
@@ -112,7 +164,7 @@ class DatabaseSeeder extends Seeder
                 'name' => $service['name'],
                 'description' => $service['description'],
                 'price' => $service['price'],
-                'user_id' => $service['user_id'],
+                'salon_id' => $service['salon_id'],
                 'work_time' => $service['work_time'],
                 'category_service_id' => $service['category_service_id']
             ]);
@@ -166,12 +218,39 @@ class DatabaseSeeder extends Seeder
         foreach ($records as $record){
             Record::create([
                 'user_id' => $record['user_id'],
-                'client_id' => $record['client_id'],
+                'salon_id' => rand(1,2),
+                'client_id' => $client_id,
                 'service_id' => $record['service_id'],
                 'time' => $record['time'],
                 'date' => $record['date']
             ]);
         }
+
+        $stuff_posts = [
+            'Владелец',
+            'Мастер',
+            'Администратор'
+        ];
+
+        foreach ($stuff_posts as $post) {
+            StuffPost::create(
+                [
+                    'name' => $post
+                ]
+            );
+        }
+
+        DB::table('user_salon')->insert([
+            'user_id' => 1,
+            'salon_id' => 1,
+            'post_id' => 1
+        ]);
+
+        DB::table('user_salon')->insert([
+            'user_id' => 1,
+            'salon_id' => 2,
+            'post_id' => 1
+        ]);
 
     }
 }

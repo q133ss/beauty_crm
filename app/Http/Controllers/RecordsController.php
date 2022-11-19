@@ -17,7 +17,8 @@ class RecordsController extends Controller
      */
     public function index()
     {
-        $records = Record::withFilter(1)->get();
+        $recordsIds = Auth()->user()->recordsIds();
+        $records = Record::whereIn('id', $recordsIds)->get();
         return view('records.index', compact('records'));
     }
 
@@ -39,7 +40,8 @@ class RecordsController extends Controller
      */
     public function create()
     {
-        //
+        $services = Auth()->user()->services();
+        return view('records.create', compact('services'));
     }
 
     /**
@@ -50,7 +52,8 @@ class RecordsController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        return back();
+        dd($request);
     }
 
     /**
@@ -62,7 +65,7 @@ class RecordsController extends Controller
     public function show($id)
     {
         $record = Record::findOrFail($id);
-
+        abort_if(!$record->checkUser(), 403);
         return view('records.show', compact('record'));
     }
 
@@ -75,7 +78,8 @@ class RecordsController extends Controller
     public function edit($id)
     {
         $record = Record::findOrFail($id);
-        return view('records.edit', compact('record'));
+        $services = Auth()->user()->services();
+        return view('records.edit', compact('record', 'services'));
     }
 
     /**

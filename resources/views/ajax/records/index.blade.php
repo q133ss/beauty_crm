@@ -3,7 +3,7 @@
         <td>{{$record->id}}</td>
         <td><a href="#">{{$record->client->name}}</a></td>
         <td>{{$record->date}}</td>
-        <td>{{$record->time->time}}</td>
+        <td>{{$record->timeFormatted()}}</td>
         <td>
             @if($record->status->name == 'confirmed')
                 <label class="badge badge-success">Подтвержден</label>

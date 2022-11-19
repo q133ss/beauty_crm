@@ -13,12 +13,9 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('user_salon', function (Blueprint $table) {
+        Schema::create('stuff_posts', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id');
-            $table->foreignId('salon_id');
-            $table->unsignedBigInteger('post_id')->comment('Должность в салоне');
-            $table->foreign('post_id')->references('id')->on('stuff_posts');
+            $table->string('name');
             $table->timestamps();
         });
     }
@@ -30,6 +27,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('user_salon');
+        Schema::dropIfExists('stuff_posts');
     }
 };

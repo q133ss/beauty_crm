@@ -16,10 +16,9 @@ return new class extends Migration
         Schema::create('salons', function (Blueprint $table) {
             $table->id();
             $table->json('work_days');
-            $table->json('work_times');
             $table->text('description');
             $table->boolean('prepayment')->default(false);
-            $table->integer('percent')->comment('Процент предоплаты');
+            $table->integer('percent')->default(0)->comment('Процент предоплаты');
             $table->timestamps();
         });
     }

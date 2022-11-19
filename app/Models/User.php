@@ -61,6 +61,33 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function salon()
     {
-        return $this->belongsToMany(Salon::class);
+        return $this->belongsToMany(Salon::class, 'user_salon');
+    }
+
+    /**
+     * @return mixed
+     */
+    public function recordsIds()
+    {
+        return $this->join('user_salon', 'user_salon.user_id', 'users.id')
+                    ->where('user_salon.user_id', $this->id)
+                    ->join('salons', 'salons.id', 'user_salon.salon_id')
+                    ->join('records', 'records.salon_id', 'salons.id')
+                    ->pluck('records.id')
+                    ->all();
+    }
+
+    /**
+     * @return mixed
+     */
+    public function services()
+    {
+        return $this->join('user_salon', 'user_salon.user_id', 'users.id')
+                    ->where('users.id', $this->id)
+                    ->where('user_salon.user_id', $this->id)
+                    ->join('salons', 'salons.id', 'user_salon.salon_id')
+                    ->join('services', 'services.salon_id', 'salons.id')
+                    ->select('services.*')
+                    ->get();
     }
 }
