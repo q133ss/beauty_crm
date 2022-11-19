@@ -21,7 +21,7 @@
         <div class="form-group">
             <label>Дата</label>
             <div class="form-control form-control-sm date-input" id="date-text">{{$record->getDate()}}</div>
-            <input type="hidden" id="date-input" class="form-control form-control-sm" value="{{$record->getDate()}}" placeholder="" name="date">
+            <input type="hidden" id="date-input" class="form-control form-control-sm" value="{{$record->date}}" placeholder="" name="date">
         </div>
 
         <div class="form-group">
@@ -33,7 +33,7 @@
             <label for="service">Услуга</label>
             <select name="service_id" class="form-control" id="service">
                 @foreach($services as $service)
-                    <option value="{{$service->id}}">{{$service->name}}</option>
+                    <option value="{{$service->id}}" @if($service->id == $record->service_id) selected @endif>{{$service->name}}</option>
                 @endforeach
             </select>
         </div>
