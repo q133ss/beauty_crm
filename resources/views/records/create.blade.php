@@ -48,6 +48,7 @@
 
         <h5>Клиент</h5>
 
+        @if(!\Request::has('user'))
         <div class="form-group">
             <div class="form-check">
                 <label for="old_client">
@@ -112,6 +113,11 @@
                 <input type="password" class="form-control" name="password_verify">
             </div>
         </div>
+        @else
+            <span class="form-control">{{App\Models\User::find(\Request('user'))->name}}</span>
+            <input type="hidden" name="client_id" value="{{\Request('user')}}">
+            <br>
+        @endif
         <button class="btn btn-info">Сохранить</button>
     </form>
 @endsection

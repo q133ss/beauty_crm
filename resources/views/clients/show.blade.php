@@ -3,39 +3,72 @@
 @section('content')
     <ul class="list-arrow">
         <img src="{{$client->avatar()}}" style="max-width: 300px" alt=""> <br>
-        <li>Имя: {{$client->name}}</li>
-        @if($client->socials())
-            @foreach($client->socials() as $key => $social)
-                <li>{{$key}} : {{$social}}</li>
-            @endforeach
-        @endif
+        <h3 class="mt-3">Информация</h3>
+        <table class="table table-bordered">
+            <tbody>
+            <tr>
+                <td>
+                    Имя
+                </td>
+                <td>
+                    {{$client->name}}
+                </td>
+            </tr>
+
+            @if($client->socials())
+            <tr>
+                <td>
+                    @foreach($client->socials() as $key => $social)
+                        {{$key}}
+                    @endforeach
+                </td>
+                <td>
+                    @foreach($client->socials() as $key => $social)
+                        {{$social}}
+                    @endforeach
+                </td>
+            </tr>
+            @endif
+            </tbody>
+        </table>
+
     </ul>
-    <button class="btn btn-info">Связаться с клиентом</button>
+    <button class="btn btn-outline-info btn-fw">Связаться с клиентом</button>
+    <a href="{{route('records.create', 'user='.$client->id)}}" class="btn btn-outline-primary btn-fw">Создать запись</a>
 
-    <h3 class="mt-3">Статистика</h3>
-    <p>
-        <i class="fa fa-rub text-primary"></i>
-        Клиент оплатил услуг на:
-        {{Auth()->user()->getSum($client->id, 'price')}}
-        ₽
-    </p>
+    <h3 class="mt-4">Статистика</h3>
 
-    <p>
-        <i class="fa fa-hourglass-end text-primary"></i>
-        Время затраченное на клиента:
-        {{Auth()->user()->getSumWorkTime($client->id)}}
-        ч
-    </p>
-{{--    Сколько времени затраченно в общем на клиента--}}
-{{--    Сколько денег принес клиент--}}
-{{--    Графики по времени и дням--}}
+    <table class="table table-bordered">
+        <tbody>
+        <tr>
+            <td>
+                <i class="fa fa-rub text-primary"></i>
+                Клиент оплатил услуг на:
+            </td>
+            <td>
+                {{Auth()->user()->getSum($client->id, 'price')}}
+                ₽
+            </td>
+        </tr>
+
+        <tr>
+            <td>
+                <i class="fa fa-hourglass-end text-primary"></i>
+                Время затраченное на клиента:
+            </td>
+            <td>
+                {{Auth()->user()->getSumWorkTime($client->id)}}
+                ч
+            </td>
+        </tr>
+        </tbody>
+    </table>
 
     <div class="card-body">
-        <h4 class="card-title">График</h4>
         <canvas id="barChart"></canvas>
     </div>
 
-    <h3 class="mt-3">История заказов</h3>
+    <h3 class="mt-4">История заказов</h3>
 
     <table class="table">
         <thead>

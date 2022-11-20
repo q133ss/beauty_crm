@@ -62,6 +62,15 @@ class DatabaseSeeder extends Seeder
             'role_id' => Role::where('name', 'user')->pluck('id')->first()
         ]);
 
+        for($i = 0; $i < 10; $i++){
+            \App\Models\User::create([
+                'name' => 'user'.$i,
+                'email' => 'user'.$i.'@email.net',
+                'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi',
+                'role_id' => Role::where('name', 'user')->pluck('id')->first()
+            ]);
+        }
+
         $days = [
             'Понедельник' => 'Пн',
             'Вторник' => 'Вт',
@@ -289,5 +298,26 @@ class DatabaseSeeder extends Seeder
             ['salon_id' => '1', 'user_id' => '3', 'order_id' => '1'],
             ['salon_id' => '1', 'user_id' => '3', 'order_id' => '2']
         ]);
+
+        for($i = 0; $i < 10; $i++){
+            $clientId = User::where('name', 'user'.$i)->pluck('id')->first();
+            Order::create([
+                'service_name' => 'Service'.$i,
+                'price' => 333,
+                'date' => Carbon::now(),
+                'time' => '11:22',
+                'work_time' => '01:30',
+                'status' => 2,
+                'client_id' => $clientId,
+                'salon_id' => 1,
+                'service_id' => 2,
+                'prepayment' => false,
+                'prepayment_percentage' => 0
+            ]);
+
+            DB::table('user_order')->insert([
+                ['salon_id' => '1', 'user_id' => $clientId, 'order_id' => Order::where('service_name','Service'.$i)->pluck('id')->first()]
+            ]);
+        }
     }
 }

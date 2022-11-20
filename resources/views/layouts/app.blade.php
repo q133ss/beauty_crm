@@ -104,6 +104,12 @@
         <!-- partial -->
         <div class="main-panel">
             <div class="content-wrapper">
+                @if(\Session::has('success'))
+                    <div class="alert alert-success">
+                        {{\Session::get('success')}}
+                    </div>
+                @endif
+
                 @yield('content')
             </div>
             <!-- content-wrapper ends -->

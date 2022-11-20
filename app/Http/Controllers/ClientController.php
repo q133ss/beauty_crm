@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ClientController\UpdateRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -74,7 +75,12 @@ class ClientController extends Controller
      */
     public function edit($id)
     {
-        //
+        $client = User::findOrFail($id);
+        if(Auth()->user()->checkClient($id)) {
+            return view('clients.edit', compact('client'));
+        }else{
+            abort(403);
+        }
     }
 
     /**
@@ -84,9 +90,14 @@ class ClientController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(UpdateRequest $request, $id)
     {
-        //
+        if(Auth()->user()->checkClient($id)) {
+            User::find($id)->update($request->validated());
+            return to_route('clients.index')->withSuccess('Клиент успешно обновлен');
+        }else{
+            abort(403);
+        }
     }
 
     /**
