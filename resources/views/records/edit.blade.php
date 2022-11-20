@@ -5,14 +5,12 @@
     <link rel="stylesheet" href="/datepicker/datepicker.min.css">
 @endsection
 @section('content')
-    @if($errors->any())
-        @if ($errors->any())
-            <div class="alert alert-danger">
-                    @foreach ($errors->all() as $error)
-                        <p class="text-danger">{{ $error }}</p>
-                    @endforeach
-            </div>
-        @endif
+    @if ($errors->any())
+        <div class="alert alert-danger">
+            @foreach ($errors->all() as $error)
+                <p class="text-danger">{{ $error }}</p>
+            @endforeach
+        </div>
     @endif
     <form action="{{route('records.update', $record->id)}}" method="POST" class="d-inline">
         @csrf

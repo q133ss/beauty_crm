@@ -262,6 +262,21 @@ class DatabaseSeeder extends Seeder
             'price' => 111,
             'date' => Carbon::now(),
             'time' => '11:22',
+            'work_time' => '01:30',
+            'status' => 2,
+            'client_id' => 3,
+            'salon_id' => 1,
+            'service_id' => 2,
+            'prepayment' => false,
+            'prepayment_percentage' => 0
+        ]);
+
+        Order::create([
+            'service_name' => 'Услуга 2',
+            'price' => 333,
+            'date' => Carbon::now(),
+            'time' => '11:22',
+            'work_time' => '01:30',
             'status' => 2,
             'client_id' => 3,
             'salon_id' => 1,
@@ -271,9 +286,8 @@ class DatabaseSeeder extends Seeder
         ]);
 
         DB::table('user_order')->insert([
-            'salon_id' => 1,
-            'user_id' => 3,
-            'order_id' => 1
+            ['salon_id' => '1', 'user_id' => '3', 'order_id' => '1'],
+            ['salon_id' => '1', 'user_id' => '3', 'order_id' => '2']
         ]);
     }
 }

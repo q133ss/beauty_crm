@@ -21,7 +21,7 @@
     </li>
 
     <li class="nav-item">
-        <a class="nav-link" href="index.html">
+        <a class="nav-link" href="{{route('clients.index')}}">
             <i class="icon-box menu-icon"></i>
             <span class="menu-title">База клиентов</span>
         </a>

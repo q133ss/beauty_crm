@@ -27,4 +27,6 @@ Route::middleware('permission')->middleware('verified')->group(function (){
     Route::post('/records/filter', [App\Http\Controllers\RecordsController::class, 'filter']);
     Route::post('/record/status/change', [App\Http\Controllers\RecordsController::class, 'status'])->name('records.status');
     Route::resource('records', App\Http\Controllers\RecordsController::class)->except('destroy');
+    Route::get('/clients/{id}/contact/', [App\Http\Controllers\ClientController::class, 'getContacts']);
+    Route::resource('clients', App\Http\Controllers\ClientController::class);
 });

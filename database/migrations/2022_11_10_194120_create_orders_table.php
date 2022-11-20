@@ -23,6 +23,7 @@ return new class extends Migration
             $table->foreignId('client_id');
             $table->foreignId('salon_id');
             $table->foreignId('service_id');
+            $table->time('work_time');
             $table->boolean('prepayment');
             $table->string('prepayment_percentage')->nullable();
             $table->timestamps();
