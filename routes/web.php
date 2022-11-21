@@ -25,6 +25,7 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 Route::middleware('permission')->middleware('verified')->group(function (){
     Route::get('/', [App\Http\Controllers\IndexController::class, 'index']);
     Route::post('/records/filter', [App\Http\Controllers\RecordsController::class, 'filter']);
+    Route::post('/records/sort/{filter}/{sort}/{orientation}', [App\Http\Controllers\RecordsController::class, 'sort']);
     Route::post('/record/status/change', [App\Http\Controllers\RecordsController::class, 'status'])->name('records.status');
     Route::resource('records', App\Http\Controllers\RecordsController::class)->except('destroy');
     Route::get('/clients/{id}/contact/', [App\Http\Controllers\ClientController::class, 'getContacts']);

@@ -116,6 +116,7 @@
         @else
             <span class="form-control">{{App\Models\User::find(\Request('user'))->name}}</span>
             <input type="hidden" name="client_id" value="{{\Request('user')}}">
+            <input type="hidden" name="choice-client" value="old">
             <br>
         @endif
         <button class="btn btn-info">Сохранить</button>

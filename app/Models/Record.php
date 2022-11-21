@@ -13,7 +13,7 @@ class Record extends Model
 
     protected $guarded = [];
 
-    public function scopeWithFilter($query, $filter = 1)
+    public function scopeWithFilter($query, $filter = 1, $sort='date', $orientation = 'DESC')
     {
         $filters = [
             'all',
@@ -21,11 +21,11 @@ class Record extends Model
         ];
         $recordsIds = Auth()->user()->recordsIds();
         if(!in_array($filter, $filters)){
-            $query->whereIn('id', $recordsIds)->where('record_status_id', $filter)->orderBy('date', 'DESC');
+            $query->whereIn('id', $recordsIds)->where('record_status_id', $filter)->orderBy($sort, $orientation);
         }elseif($filter == 'all'){
-            $query->whereIn('id', $recordsIds)->orderBy('date','DESC');
+            $query->whereIn('id', $recordsIds)->orderBy($sort, $orientation);
         }elseif($filter == 'processed'){
-            $query->whereIn('id', $recordsIds)->where('record_status_id', '!=', 1)->orderBy('date', 'DESC');
+            $query->whereIn('id', $recordsIds)->where('record_status_id', '!=', 1)->orderBy($sort, $orientation);
         }
         return $query;
     }

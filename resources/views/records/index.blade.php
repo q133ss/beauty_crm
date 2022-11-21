@@ -26,12 +26,12 @@
     </div>
     <table class="table">
         <thead>
-        <tr>
-            <th>№</th>
-            <th>Клиент</th>
-            <th>Дата</th>
-            <th>Время</th>
-            <th>Статус</th>
+        <tr class="clients-table_header">
+            <th data-sort="id">№</th>
+            <th data-sort="client">Клиент</th>
+            <th data-sort="data">Дата</th>
+            <th data-sort="time">Время</th>
+            <th data-sort="status">Статус</th>
             <th>Действия</th>
         </tr>
         </thead>
@@ -59,6 +59,7 @@
         @endforeach
         </tbody>
     </table>
+    <input type="hidden" id="filter-input">
 @endsection
 @section('scripts')
     <script>
@@ -74,11 +75,51 @@
                 },
                 success: (data) => {
                     $('#records').html(data)
+                    $('#filter-input').val(field)
                 },
                 error: function(request, status, error) {
                     //console.log(statusCode = request.responseText);
                 }
-            })
+            });
         }
+
+        let lastField = '';
+        let orientation = 'ASC';
+
+        $('.clients-table_header>th').click(function (){
+            let sort = $(this).data('sort');
+
+
+            //Выделение сортировки
+            $('.clients-table_header>th').css('font-weight','500');
+            $(this).css('font-weight','700');
+
+            //Проверяем на ASC/DESC
+            if(lastField !== sort){
+                lastField = sort;
+                orientation = 'ASC';
+            }else{
+                if(orientation == 'DESC') {
+                    orientation = 'ASC';
+                }else{
+                    orientation = 'DESC';
+                }
+            }
+
+            $.ajax({
+                url: '/records/sort/1/' + sort + '/' + orientation,
+                type: "POST",
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                success: (data) => {
+                    $('#records').html(data)
+                    $('#filter-input').val(field)
+                },
+                error: function (request, status, error) {
+                    //console.log(statusCode = request.responseText);
+                }
+            });
+        });
     </script>
 @endsection

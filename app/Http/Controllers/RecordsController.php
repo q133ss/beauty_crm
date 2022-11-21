@@ -6,7 +6,6 @@ use App\Http\Requests\RecordsController\StatusRequest;
 use App\Http\Requests\RecordsController\StoreRequest;
 use App\Http\Requests\RecordsController\UpdateRequest;
 use App\Models\Record;
-use App\Models\User;
 use App\Services\Records\StatusService;
 use App\Services\Records\StoreService;
 use Illuminate\Http\Request;
@@ -31,6 +30,12 @@ class RecordsController extends Controller
     {
         $records = Record::withFilter($request->field)->get();
         return view('ajax.records.index', compact('records'));
+    }
+
+    public function sort($filter, $sort, $orientation)
+    {
+        $records = Record::withFilter($filter, $sort, $orientation)->get();
+        return view('ajax.records.index', compact('records'))->render();
     }
 
     public function status(StatusRequest $request)

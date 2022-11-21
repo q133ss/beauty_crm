@@ -27,7 +27,7 @@
     </div>
     <table class="table">
         <thead>
-        <tr>
+        <tr class="clients-table_header">
             <th>№</th>
             <th>Фото</th>
             <th>Имя</th>
@@ -44,7 +44,7 @@
                 <td><img src="{{$client->avatar()}}" width="100px" alt=""></td>
                 <td>{{$client->name}}</td>
                 <td>
-                    <a href="#">{{$client->lastOrderSalon()->name}}</a>
+                    <a href="#">{{$client->lastOrderSalon() ? $client->lastOrderSalon()->name : 'Ошибка'}}</a>
                 </td>
                 <td>{{mb_substr($client->lastOrder()->created_at,0,16)}}</td>
                 <td>
@@ -79,6 +79,11 @@
     </div>
 @endsection
 @section('scripts')
+    <style>
+        .clients-table_header th{
+            cursor: pointer;
+        }
+    </style>
     <script>
         function getContacts(id){
             $.ajax({
@@ -93,7 +98,12 @@
                 error: function(request, status, error) {
                     //console.log(statusCode = request.responseText);
                 }
-            })
+            });
         }
+
+        $('.clients-table_header>th').click(function (){
+            $('.clients-table_header>th').css('font-weight','500');
+            $(this).css('font-weight','700');
+        });
     </script>
 @endsection
