@@ -27,11 +27,11 @@
     <table class="table">
         <thead>
         <tr class="clients-table_header">
-            <th data-sort="id">№</th>
-            <th data-sort="client">Клиент</th>
-            <th data-sort="data">Дата</th>
-            <th data-sort="time">Время</th>
-            <th data-sort="status">Статус</th>
+            <th data-sort="id">№ <i></i></th>
+            <th data-sort="client">Клиент <i></i></th>
+            <th data-sort="data">Дата <i></i></th>
+            <th data-sort="time">Время <i></i></th>
+            <th data-sort="status">Статус <i></i></th>
             <th>Действия</th>
         </tr>
         </thead>
@@ -88,26 +88,40 @@
 
         $('.clients-table_header>th').click(function (){
             let sort = $(this).data('sort');
-
+            let field = $('#filter-input').val();
 
             //Выделение сортировки
             $('.clients-table_header>th').css('font-weight','500');
             $(this).css('font-weight','700');
+            $('.clients-table_header>th>i').removeClass('fa fa-arrow-down');
+            $('.clients-table_header>th>i').removeClass('fa fa-arrow-up');
 
             //Проверяем на ASC/DESC
             if(lastField !== sort){
                 lastField = sort;
                 orientation = 'ASC';
+                $(this).find('i').removeClass('fa fa-arrow-down')
+                $(this).find('i').addClass('fa fa-arrow-up')
             }else{
-                if(orientation == 'DESC') {
+                if(orientation === 'DESC') {
                     orientation = 'ASC';
+                    $(this).find('i').removeClass('fa fa-arrow-down')
+                    $(this).find('i').addClass('fa fa-arrow-up')
                 }else{
                     orientation = 'DESC';
+                    $(this).find('i').removeClass('fa fa-arrow-up')
+                    $(this).find('i').addClass('fa fa-arrow-down')
                 }
             }
 
+            url_path = '/records/sort/' + field + '/' + sort + '/' + orientation;
+
+            if(field === '' || field === undefined){
+                url_path = '/records/sort/1/' + sort + '/' + orientation;
+            }
+
             $.ajax({
-                url: '/records/sort/1/' + sort + '/' + orientation,
+                url: url_path,
                 type: "POST",
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
