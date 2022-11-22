@@ -13,16 +13,28 @@
             Клиенты которые давно не пользовались вашими услугами находятся в разделе
             <a href="#">Спящие клиенты</a>
         </div>
-        <a href="{{route('clients.create')}}" class="btn btn-success" style="align-self: center">Добавить</a>
+        <a href="{{route('clients.create')}}" class="btn btn-sm btn-success" style="align-self: center">Добавить</a>
 
         <div class="col" style="align-self: center">
-            <select name="" style="align-self: center" onchange="filter($(this).val())" class="form-control" id="">
-                <option value="1">Необработанные</option>
-                <option value="processed">Обработанные</option>
-                <option value="2">Подтвержденные</option>
-                <option value="3">Отклоненные</option>
-                <option value="all">Все</option>
+            <select name="" style="align-self: center" onchange="salonFilter($(this).val())" class="form-control" id="">
+                <option value="" disabled selected>Салон</option>
+                @foreach($salons as $salon)
+                    <option value="{{$salon->id}}">{{$salon->name}}</option>
+                @endforeach
             </select>
+        </div>
+
+        <div class="col" style="align-self: center">
+            <select name="" style="align-self: center" onchange="clientFilter($(this).val())" class="form-control" id="">
+                <option value="" disabled selected>Клиент</option>
+                @foreach($clients as $client)
+                    <option value="{{$client->id}}">{{$client->name}}</option>
+                @endforeach
+            </select>
+        </div>
+
+        <div class="col" style="align-self: center">
+            <input type="text" placeholder="Поиск" class="form-control-sm" oninput="search($(this).val())">
         </div>
     </div>
     <table class="table">
@@ -85,6 +97,38 @@
         }
     </style>
     <script>
+        function salonFilter(salon_id){
+            $.ajax({
+                url: '/clients/salon/filter/'+salon_id,
+                type: "GET",
+                headers:{
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                success: (data) => {
+                    $('#records').html(data)
+                },
+                error: function(request, status, error) {
+                    //console.log(statusCode = request.responseText);
+                }
+            });
+        }
+
+        function clientFilter(client_id){
+            $.ajax({
+                url: '/clients/client/filter/'+client_id,
+                type: "GET",
+                headers:{
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                success: (data) => {
+                    $('#records').html(data)
+                },
+                error: function(request, status, error) {
+                    //console.log(statusCode = request.responseText);
+                }
+            });
+        }
+
         function getContacts(id){
             $.ajax({
                 url: '/clients/'+id+'/contact/',
@@ -105,5 +149,21 @@
             $('.clients-table_header>th').css('font-weight','500');
             $(this).css('font-weight','700');
         });
+
+        function search(request){
+            $.ajax({
+                url: '/clients/search/'+request,
+                type: "GET",
+                headers:{
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                success: (data) => {
+                    $('#records').html(data)
+                },
+                error: function(request, status, error) {
+                    //console.log(statusCode = request.responseText);
+                }
+            });
+        }
     </script>
 @endsection

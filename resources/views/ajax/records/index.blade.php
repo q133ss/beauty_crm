@@ -1,7 +1,7 @@
 @foreach($records as $record)
     <tr>
         <td>{{$record->id}}</td>
-        <td><a href="#">{{$record->client->name}}</a></td>
+        <td><a href="{{route('clients.show', $record->client->id)}}">{{$record->client->name}}</a></td>
         <td>{{$record->date}}</td>
         <td>{{$record->timeFormatted()}}</td>
         <td>

@@ -15,8 +15,10 @@ class ClientController extends Controller
      */
     public function index()
     {
-        $clients = Auth()->user()->clients();
-        return view('clients.index', compact('clients'));
+        $user = Auth()->user();
+        $clients = $user->clients();
+        $salons = $user->salons;
+        return view('clients.index', compact('clients','salons'));
     }
 
     public function getContacts($id)
@@ -27,6 +29,30 @@ class ClientController extends Controller
         }else{
             return false;
         }
+    }
+
+    public function salonFilter($salon_id)
+    {
+        $user = Auth()->user();
+        $clients = $user->clientsSalonFilter($salon_id);
+        $salons = $user->salons;
+        return view('ajax.clients.index', compact('clients','salons'));
+    }
+
+    public function clientFilter($client_id)
+    {
+        $user = Auth()->user();
+        $clients = $user->clientsFilter($client_id);
+        $salons = $user->salons;
+        return view('ajax.clients.index', compact('clients','salons'));
+    }
+
+    public function search($request)
+    {
+        $user = Auth()->user();
+        $clients = $user->clientsSearch($request);
+        $salons = $user->salons;
+        return view('ajax.clients.index', compact('clients','salons'));
     }
 
     /**

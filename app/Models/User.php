@@ -109,6 +109,34 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->whereIn('id', $client_ids)->get();
     }
 
+    public function clientsSalonFilter($salon_id)
+    {
+        $client_ids = $this->join('user_salon', 'user_salon.id', 'users.id')
+            ->where('users.id', $this->id)
+            ->join('salons', 'salons.id', 'user_salon.salon_id')
+            ->join('user_order', 'user_order.salon_id', 'salons.id')
+            ->where('salons.id', $salon_id)
+            ->join('orders', 'orders.id', 'user_order.order_id')
+            ->pluck('orders.client_id')
+            ->all();
+
+        return $this->whereIn('id', $client_ids)->get();
+    }
+
+    public function clientsFilter($client_id)
+    {
+        $client_ids = $this->join('user_salon', 'user_salon.id', 'users.id')
+            ->where('users.id', $this->id)
+            ->join('salons', 'salons.id', 'user_salon.salon_id')
+            ->join('user_order', 'user_order.salon_id', 'salons.id')
+            ->join('orders', 'orders.id', 'user_order.order_id')
+            ->where('client_id', $client_id)
+            ->pluck('orders.client_id')
+            ->all();
+
+        return $this->whereIn('id', $client_ids)->get();
+    }
+
     /**
      * Проверяет, относиться-ли клиент к юзеру
      * Нужно для того, что бы нельзя было смотреть чужих клиентов
@@ -135,6 +163,26 @@ class User extends Authenticatable implements MustVerifyEmail
         }
 
         return false;
+    }
+
+    public function clientsSearch($request)
+    {
+        #TODO Сделать регистронезависимый поиск
+        $client_ids = $this->join('user_salon', 'user_salon.id', 'users.id')
+            ->where('users.id', $this->id)
+            ->join('salons', 'salons.id', 'user_salon.salon_id')
+            ->join('user_order', 'user_order.salon_id', 'salons.id')
+            ->join('orders', 'orders.id', 'user_order.order_id')
+            ->where('orders.date', 'LIKE', '%'.$request.'%')
+            ->orWhere('orders.time', 'LIKE', '%'.$request.'%')
+            ->orWhere('salons.name', 'LIKE', '%'.$request.'%')
+            ->pluck('orders.client_id')
+            ->all();
+
+        return $this->whereIn('id', $client_ids)
+            ->orWhere('name', 'LIKE', '%'.$request.'%')
+            ->orWhere('phone', 'LIKE', '%'.$request.'%')
+            ->get();
     }
 
     public function orders()
@@ -210,5 +258,10 @@ class User extends Authenticatable implements MustVerifyEmail
         }
 
         return date('H:i',array_sum($time_sum));
+    }
+
+    public function salons()
+    {
+        return $this->belongsToMany(Salon::class, 'user_salon', 'user_id', 'salon_id');
     }
 }
