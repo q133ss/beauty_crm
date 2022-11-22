@@ -23,17 +23,16 @@ class StoreService{
                 'name' => $data['name'],
                 'email' => $data['email'],
                 'note' => $data['note'],
-                'password' => $data['password'],
-                'password_verify' => $data['password_verify']
+                'phone' => $data['phone'],
+                'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi'
             ];
 
-            $socials = [
-                'whatsapp' => $data['whatsapp'],
-                'telegram' => $data['telegram'],
-                'phone' => $data['phone']
-            ];
+//            $socials = [
+//                'whatsapp' => $data['whatsapp'],
+//                'telegram' => $data['telegram'],
+//            ];
 
-            $user_data['socials'] = json_encode($socials);
+//            $user_data['socials'] = json_encode($socials);
 
             $user = User::create($user_data);
 
@@ -41,6 +40,8 @@ class StoreService{
             $record_data['client_id'] = $user->id;
             $record_data['user_id'] = Auth()->id();
             Record::create($record_data);
+
+            //TODO salon_user
         }
         return true;
     }

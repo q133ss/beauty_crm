@@ -19,6 +19,8 @@ return new class extends Migration
             $table->boolean('is_salon')->default(false);
             $table->string('note')->nullable();
             $table->json('socials')->nullable();
+            $table->string('phone')->unique();
+            $table->string('telegram')->nullable();
         });
     }
 

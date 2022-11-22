@@ -84,33 +84,29 @@
             </div>
 
             <div class="form-group">
+                <label for="phone">Телефон</label>
+                <input type="text" id="phone-input" placeholder="+7(XXX)XXX-XX-XX" name="phone" class="form-control">
+            </div>
+
+            <div class="form-group">
                 <label for="tg">Telegram (Не обязательно)</label>
                 <input class="form-control" type="text" id="tg" value="{{old('telegram')}}" name="telegram">
             </div>
 
-            <div class="form-group">
-                <label for="wa">Whatsapp (Не обязательно)</label>
-                <input class="form-control" type="text" id="wa" value="{{old('whatsapp')}}" name="whatsapp">
-            </div>
-
-            <div class="form-group">
-                <label for="phone">Телефон (Не обязательно)</label>
-                <input class="form-control" type="text" id="phone" value="{{old('phone')}}" name="phone">
+            <h6>Дополнительные контактные данные</h6>
+            <div id="additional-contacts">
+                <div class="input-group mb-3">
+                    <input type="text" class="form-control" name="social_name[]" placeholder="Название" aria-label="Название" aria-describedby="basic-addon2">
+                    <input type="text" class="form-control" name="social_val[]" placeholder="Ссылка/Номер" aria-label="Ссылка/Номер" aria-describedby="basic-addon2">
+                    <div class="input-group-append">
+                        <button class="btn btn-outline-secondary" onclick="addSocial()" type="button">Добавить</button>
+                    </div>
+                </div>
             </div>
 
             <div class="form-group">
                 <label for="note">Заметка (Не обязательно)</label>
                 <input class="form-control" type="text" id="note" value="{{old('note')}}" name="note">
-            </div>
-
-            <div class="form-group">
-                <label for="password">Пароль</label>
-                <input type="password" class="form-control" name="password">
-            </div>
-
-            <div class="form-group">
-                <label for="password">Повторите пароль</label>
-                <input type="password" class="form-control" name="password_verify">
             </div>
         </div>
         @else
@@ -123,6 +119,7 @@
     </form>
 @endsection
 @section('scripts')
+    <script src="/js/jquery.mask.min.js"></script>
     <script>
         const picker = datepicker('.date-input', {
             customMonths: ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'],
@@ -150,6 +147,8 @@
             console.log('#'+type+'-client-form')
             $('#'+type+'-client-form').show()
         }
+
+        $('#phone-input').mask('+7(000)000-00-00')
     </script>
     <style>
         .qs-datepicker{
@@ -186,4 +185,6 @@
             background: rgba(255, 255, 255, 0.4);
         }
     </style>
+
+    <script src="/js/custom.js"></script>
 @endsection

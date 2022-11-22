@@ -27,11 +27,11 @@
     <table class="table">
         <thead>
         <tr class="clients-table_header">
-            <th data-sort="id">№ <i></i></th>
-            <th data-sort="client">Клиент <i></i></th>
-            <th data-sort="data">Дата <i></i></th>
-            <th data-sort="time">Время <i></i></th>
-            <th data-sort="status">Статус <i></i></th>
+            <th data-sort="id">№ <div class="table-sort"><i class="fa fa-arrow-up"></i><i class="fa fa-arrow-down"></i></div></th>
+            <th data-sort="client">Клиент <div class="table-sort"><i class="fa fa-arrow-up"></i><i class="fa fa-arrow-down"></i></div></th>
+            <th data-sort="data">Дата <div class="table-sort"><i class="fa fa-arrow-up"></i><i class="fa fa-arrow-down"></i></div></th>
+            <th data-sort="time">Время <div class="table-sort"><i class="fa fa-arrow-up"></i><i class="fa fa-arrow-down"></i></div></th>
+            <th data-sort="status">Статус <div class="table-sort"><i class="fa fa-arrow-up"></i><i class="fa fa-arrow-down"></i></div></th>
             <th>Действия</th>
         </tr>
         </thead>
@@ -39,7 +39,7 @@
         @foreach($records as $record)
         <tr>
             <td>{{$record->id}}</td>
-            <td><a href="#">{{$record->client->name}}</a></td>
+            <td><a href="{{route('clients.show', $record->client->id)}}">{{$record->client->name}}</a></td>
             <td>{{$record->getDate()}}</td>
             <td>{{$record->timeFormatted()}}</td>
             <td>
@@ -62,6 +62,17 @@
     <input type="hidden" id="filter-input">
 @endsection
 @section('scripts')
+    <style>
+        .clients-table_header th{
+            cursor: pointer;
+        }
+
+        .table-sort{
+            display: grid;
+            float: right;
+            font-size: 8px;
+        }
+    </style>
     <script>
         function filter(field){
             $.ajax({
@@ -91,26 +102,23 @@
             let field = $('#filter-input').val();
 
             //Выделение сортировки
-            $('.clients-table_header>th').css('font-weight','500');
+            $('.clients-table_header>th').find('i').css('color','#666666');
             $(this).css('font-weight','700');
-            $('.clients-table_header>th>i').removeClass('fa fa-arrow-down');
-            $('.clients-table_header>th>i').removeClass('fa fa-arrow-up');
 
             //Проверяем на ASC/DESC
             if(lastField !== sort){
                 lastField = sort;
                 orientation = 'ASC';
-                $(this).find('i').removeClass('fa fa-arrow-down')
-                $(this).find('i').addClass('fa fa-arrow-up')
+                $(this).find('i.fa-arrow-up').css('color', '#ec37fc')
             }else{
                 if(orientation === 'DESC') {
                     orientation = 'ASC';
-                    $(this).find('i').removeClass('fa fa-arrow-down')
-                    $(this).find('i').addClass('fa fa-arrow-up')
+                    $(this).find('i.fa-arrow-down').css('color', '#666666')
+                    $(this).find('i.fa-arrow-up').css('color', '#ec37fc')
                 }else{
                     orientation = 'DESC';
-                    $(this).find('i').removeClass('fa fa-arrow-up')
-                    $(this).find('i').addClass('fa fa-arrow-down')
+                    $(this).find('i.fa-arrow-down').css('color', '#ec37fc')
+                    $(this).find('i.fa-arrow-up').css('color', '#666666')
                 }
             }
 

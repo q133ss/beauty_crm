@@ -29,16 +29,15 @@ class StoreRequest extends FormRequest
             'service_id' => 'required|integer|exists:services,id',
             'salon_id' => 'required|integer|exists:salons,id',
             'choice-client' => '',
-            'client_id' => 'required|integer|exists:users,id',
+            'client_id' => 'nullable|integer|exists:users,id',
 
             'name' => 'nullable|string',
             'email' => 'nullable|email|unique:users,email',
-            'whatsapp' => 'nullable|string',
+            'phone' => 'required|min:16|regex:/[+]{1}[0-9]{1}[(]{1}[0-9]{3}[)]{1}[0-9]{3}[-]{1}[0-9]{2}[-]{1}[0-9]{2}/',
             'telegram' => 'nullable|string',
-            'phone' => 'nullable|string',
+            'social_name' => 'nullable|array',
+            'social_val' => 'nullable|array',
             'note' => 'nullable|string',
-            'password' => 'nullable|string|required_with:password_verify|same:password_verify',
-            'password_verify' => 'nullable|string'
         ];
     }
 
@@ -67,9 +66,9 @@ class StoreRequest extends FormRequest
             'email.email' => 'Email не корректный',
             'email.unique' => 'Пользователь с таким Email уже существует',
 
-            'whatsapp.string' => 'Поле Whatsapp некорректное',
             'telegram.string' => 'Поле Telegram некорректное',
-            'phone.string' => 'Поле телефон некорректное',
+            'phone.regex' => 'Поле телефон некорректное',
+            'phone.min' => 'Поле телефон некорректное',
             'note.string' => 'Поле заметка некорректное',
 
             'password.string' => 'Поле пароль некорректное',

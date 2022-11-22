@@ -25,7 +25,10 @@ class User extends Authenticatable implements MustVerifyEmail
         'password',
         'role_id',
         'end_subscription',
-        'role_id'
+        'role_id',
+        'phone',
+        'telegram',
+        'socials'
     ];
 
     /**
@@ -114,19 +117,24 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function checkClient($client_id)
     {
-        $client_ids = $this->join('user_salon', 'user_salon.id', 'users.id')
+        $records = $this->join('user_salon', 'user_salon.user_id', 'users.id')
             ->where('users.id', $this->id)
-            ->join('salons', 'salons.id', 'user_salon.salon_id')
-            ->join('user_order', 'user_order.salon_id', 'salons.id')
-            ->join('orders', 'orders.id', 'user_order.order_id')
-            ->pluck('orders.client_id')
-            ->all();
+            ->join('records', 'records.salon_id', 'user_salon.salon_id')
+            ->where('records.client_id', $client_id)
+            ->exists();
 
-        if(!in_array($client_id, $client_ids)){
-            return false;
+        $orders = $this->join('user_salon', 'user_salon.user_id', 'users.id')
+            ->where('users.id', $this->id)
+            ->join('user_order', 'user_order.salon_id', 'user_salon.id')
+            ->join('orders', 'orders.id', 'user_order.order_id')
+            ->where('orders.client_id', $client_id)
+            ->exists();
+
+        if($records || $orders) {
+            return true;
         }
 
-        return true;
+        return false;
     }
 
     public function orders()

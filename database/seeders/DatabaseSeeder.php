@@ -45,12 +45,14 @@ class DatabaseSeeder extends Seeder
             'email' => 'admin@email.net',
             'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi',
             'email_verified_at' => Carbon::now(),
+            'phone' => '89518677086',
             'role_id' => Role::where('name', 'admin')->pluck('id')->first()
         ]);
 
         \App\Models\User::create([
             'name' => 'master',
             'email' => 'master@email.net',
+            'phone' => '899999999',
             'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi',
             'role_id' => Role::where('name', 'master')->pluck('id')->first()
         ]);
@@ -58,6 +60,7 @@ class DatabaseSeeder extends Seeder
         \App\Models\User::create([
             'name' => 'user',
             'email' => 'user@email.net',
+            'phone' => '8989888898989',
             'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi',
             'role_id' => Role::where('name', 'user')->pluck('id')->first()
         ]);
@@ -66,6 +69,7 @@ class DatabaseSeeder extends Seeder
             \App\Models\User::create([
                 'name' => 'user'.$i,
                 'email' => 'user'.$i.'@email.net',
+                'phone' => '89515151'.$i,
                 'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi',
                 'role_id' => Role::where('name', 'user')->pluck('id')->first()
             ]);
