@@ -17,8 +17,9 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id');
             $table->foreignId('salon_id');
-            $table->unsignedBigInteger('post_id')->comment('Должность в салоне');
+            $table->unsignedBigInteger('post_id')->nullable()->comment('Должность в салоне');
             $table->foreign('post_id')->references('id')->on('stuff_posts');
+            $table->boolean('is_client')->default(true);
             $table->timestamps();
         });
     }

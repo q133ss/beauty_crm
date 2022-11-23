@@ -33,7 +33,7 @@ class StoreRequest extends FormRequest
 
             'name' => 'nullable|string',
             'email' => 'nullable|email|unique:users,email',
-            'phone' => 'required|min:16|regex:/[+]{1}[0-9]{1}[(]{1}[0-9]{3}[)]{1}[0-9]{3}[-]{1}[0-9]{2}[-]{1}[0-9]{2}/',
+            'phone' => 'required|unique:users,phone|min:16|regex:/[+]{1}[0-9]{1}[(]{1}[0-9]{3}[)]{1}[0-9]{3}[-]{1}[0-9]{2}[-]{1}[0-9]{2}/',
             'telegram' => 'nullable|string',
             'social_name' => 'nullable|array',
             'social_val' => 'nullable|array',
@@ -67,6 +67,7 @@ class StoreRequest extends FormRequest
             'email.unique' => 'Пользователь с таким Email уже существует',
 
             'telegram.string' => 'Поле Telegram некорректное',
+            'phone.unique' => 'Пользователь с таким номером телефона уже существует',
             'phone.regex' => 'Поле телефон некорректное',
             'phone.min' => 'Поле телефон некорректное',
             'note.string' => 'Поле заметка некорректное',

@@ -19,13 +19,15 @@ return new class extends Migration
             $table->double('price');
             $table->date('date');
             $table->time('time');
-            $table->enum('status', ['wait', 'done', 'cancel'])->comment('Ожидает оплату, оплачен, не оплачен');
-            $table->foreignId('client_id');
+            $table->foreignId('order_status_id');
+            $table->unsignedBigInteger('client_id');
             $table->foreignId('salon_id');
+            $table->unsignedBigInteger('master_id');
             $table->foreignId('service_id');
             $table->time('work_time');
-            $table->boolean('prepayment');
             $table->string('prepayment_percentage')->nullable();
+            $table->foreign('client_id')->references('id')->on('users');
+            $table->foreign('master_id')->references('id')->on('users');
             $table->timestamps();
         });
     }

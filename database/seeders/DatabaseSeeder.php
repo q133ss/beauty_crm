@@ -5,16 +5,14 @@ namespace Database\Seeders;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use App\Models\Day;
 use App\Models\Order;
-use App\Models\Record;
-use App\Models\RecordStatus;
 use App\Models\Role;
 use App\Models\Salon;
 use App\Models\Service;
 use App\Models\ServiceCategory;
 use App\Models\StuffPost;
-use App\Models\Time;
 use App\Models\User;
 use App\Models\WorkTime;
+use App\Services\TranslitService;
 use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
@@ -189,57 +187,61 @@ class DatabaseSeeder extends Seeder
 
         $client_id = User::where('name', 'user')->pluck('id')->first();
 
-        $record_statuses = [
-            'not_processed',
-            'confirmed',
-            'rejected'
-        ];
 
-        foreach ($record_statuses as $status){
-            RecordStatus::create([
-                'name' => $status
-            ]);
-        }
+        #TODO Убать все что связанно с records
 
-        $records = [
+
+        //Статусы заказа
+        DB::table('order_status')->insert([
+            ['name' => 'Не обработана', 'code' => 'not_processed'],
+            ['name' => 'Подтверждена', 'code' => 'confirmed'],
+            ['name' => 'Отклонена', 'code' => 'rejected'],
+            ['name' => 'Ожидание оплаты', 'code' => 'waiting_for_payment'],
+            ['name' => 'Завершена', 'code' => 'сompleted'],
+            ['name' => 'Не оплачена', 'code' => 'not_paid']
+        ]);
+
+        $orders = [
             [
                 'user_id' => $admin_id,
                 'client_id' => $client_id,
-                'service_id' => rand(1,2),
                 'time' => Carbon::now(),
                 'date' => new Carbon('2022-09-22')
             ],
             [
                 'user_id' => $admin_id,
                 'client_id' => $client_id,
-                'service_id' => rand(1,2),
                 'time' => Carbon::now(),
                 'date' => new Carbon('2022-11-03')
             ],
             [
                 'user_id' => $admin_id,
                 'client_id' => $client_id,
-                'service_id' => rand(1,2),
                 'time' => Carbon::now(),
                 'date' => new Carbon('2022-12-11')
             ],
             [
                 'user_id' => $admin_id,
                 'client_id' => $client_id,
-                'service_id' => rand(1,2),
                 'time' => Carbon::now(),
                 'date' => new Carbon('2020-03-12')
             ],
         ];
 
-        foreach ($records as $record){
-            Record::create([
-                'user_id' => $record['user_id'],
+        foreach ($orders as $order){
+            $service = Service::inRandomOrder()->first();
+            Order::create([
+                'service_name' => $service->name,
+                'price' => $service->price,
+                'order_status_id' => DB::table('order_status')->where('id', rand(1,6))->pluck('id')->first(),
+                'master_id' => $order['user_id'],
                 'salon_id' => rand(1,2),
                 'client_id' => $client_id,
-                'service_id' => $record['service_id'],
-                'time' => $record['time'],
-                'date' => $record['date']
+                'service_id' => $service->id,
+                'work_time' => $service->work_time,
+                'time' => $order['time'],
+                'date' => $order['date'],
+                'prepayment_percentage' => 0
             ]);
         }
 
@@ -252,7 +254,8 @@ class DatabaseSeeder extends Seeder
         foreach ($stuff_posts as $post) {
             StuffPost::create(
                 [
-                    'name' => $post
+                    'name' => $post,
+                    'slug' => TranslitService::RusToLat($post)
                 ]
             );
         }
@@ -260,68 +263,15 @@ class DatabaseSeeder extends Seeder
         DB::table('user_salon')->insert([
             'user_id' => 1,
             'salon_id' => 1,
-            'post_id' => 1
+            'post_id' => 1,
+            'is_client' => false
         ]);
 
         DB::table('user_salon')->insert([
             'user_id' => 1,
             'salon_id' => 2,
-            'post_id' => 1
+            'post_id' => 1,
+            'is_client' => false
         ]);
-
-        //Order
-        Order::create([
-            'service_name' => 'Услуга',
-            'price' => 111,
-            'date' => Carbon::now(),
-            'time' => '11:22',
-            'work_time' => '01:30',
-            'status' => 2,
-            'client_id' => 3,
-            'salon_id' => 1,
-            'service_id' => 2,
-            'prepayment' => false,
-            'prepayment_percentage' => 0
-        ]);
-
-        Order::create([
-            'service_name' => 'Услуга 2',
-            'price' => 333,
-            'date' => Carbon::now(),
-            'time' => '11:22',
-            'work_time' => '01:30',
-            'status' => 2,
-            'client_id' => 3,
-            'salon_id' => 1,
-            'service_id' => 2,
-            'prepayment' => false,
-            'prepayment_percentage' => 0
-        ]);
-
-        DB::table('user_order')->insert([
-            ['salon_id' => '1', 'user_id' => '3', 'order_id' => '1'],
-            ['salon_id' => '1', 'user_id' => '3', 'order_id' => '2']
-        ]);
-
-        for($i = 0; $i < 10; $i++){
-            $clientId = User::where('name', 'user'.$i)->pluck('id')->first();
-            Order::create([
-                'service_name' => 'Service'.$i,
-                'price' => 333,
-                'date' => Carbon::now(),
-                'time' => '11:22',
-                'work_time' => '01:30',
-                'status' => 2,
-                'client_id' => $clientId,
-                'salon_id' => 1,
-                'service_id' => 2,
-                'prepayment' => false,
-                'prepayment_percentage' => 0
-            ]);
-
-            DB::table('user_order')->insert([
-                ['salon_id' => '1', 'user_id' => $clientId, 'order_id' => Order::where('service_name','Service'.$i)->pluck('id')->first()]
-            ]);
-        }
     }
 }

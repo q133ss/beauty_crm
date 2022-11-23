@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Support\Facades\DB;
 use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable implements MustVerifyEmail
@@ -28,7 +27,8 @@ class User extends Authenticatable implements MustVerifyEmail
         'role_id',
         'phone',
         'telegram',
-        'socials'
+        'socials',
+        'note'
     ];
 
     /**
@@ -263,5 +263,18 @@ class User extends Authenticatable implements MustVerifyEmail
     public function salons()
     {
         return $this->belongsToMany(Salon::class, 'user_salon', 'user_id', 'salon_id');
+    }
+
+    /**
+     * Проверяет относиться ли салон к юзеру
+     * @param $salon_id
+     * @return mixed
+     */
+    public function salonCheck($salon_id)
+    {
+        return $this->join('user_salon', 'user_salon.user_id', 'users.id')
+                ->join('salons', 'salons.id', 'user_salon.salon_id')
+                ->where('salons.id', $salon_id)
+                ->exists();
     }
 }

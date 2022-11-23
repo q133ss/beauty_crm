@@ -1,3 +1,5 @@
+import {last} from "lodash";
+
 let social_count = 0;
 function addSocial() {
     social_count++;

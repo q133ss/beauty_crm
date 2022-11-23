@@ -16,6 +16,7 @@ return new class extends Migration
         Schema::create('stuff_posts', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->string('slug')->comment('Создается автоматически!');
             $table->timestamps();
         });
     }

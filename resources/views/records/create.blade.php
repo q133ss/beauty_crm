@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', 'Добавить клиента')
+@section('title', 'Добавить запись')
 @section('meta')
     <script src="/datepicker/datepicker.min.js"></script>
     <link rel="stylesheet" href="/datepicker/datepicker.min.css">

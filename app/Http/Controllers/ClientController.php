@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ClientController\StoreRequest;
 use App\Http\Requests\ClientController\UpdateRequest;
 use App\Models\User;
+use App\Services\Clients\StoreService;
 use Illuminate\Http\Request;
 
 class ClientController extends Controller
@@ -62,7 +64,8 @@ class ClientController extends Controller
      */
     public function create()
     {
-        //
+        $salons = Auth()->user()->salons;
+        return view('clients.create', compact('salons'));
     }
 
     /**
@@ -71,9 +74,10 @@ class ClientController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreRequest $request)
     {
-        //
+        StoreService::store($request->validated());
+        return to_route('clients.index')->withSuccess('Клиент успешно добавлен');
     }
 
     /**
