@@ -17,7 +17,7 @@
 
         <div class="col" style="align-self: center">
             <select name="" style="align-self: center" onchange="salonFilter($(this).val())" class="form-control" id="">
-                <option value="" disabled selected>Салон</option>
+                <option value="" id="salon-filter" disabled selected>Салон</option>
                 @foreach($salons as $salon)
                     <option value="{{$salon->id}}">{{$salon->name}}</option>
                 @endforeach
@@ -26,7 +26,7 @@
 
         <div class="col" style="align-self: center">
             <select name="" style="align-self: center" onchange="clientFilter($(this).val())" class="form-control" id="">
-                <option value="" disabled selected>Клиент</option>
+                <option value="" id="client-filter" disabled selected>Клиент</option>
                 @foreach($clients as $client)
                     <option value="{{$client->id}}">{{$client->name}}</option>
                 @endforeach
@@ -34,7 +34,7 @@
         </div>
 
         <div class="col" style="align-self: center">
-            <input type="text" placeholder="Поиск" class="form-control-sm" oninput="search($(this).val())">
+            <input type="text" id="search" placeholder="Поиск" style="border: 0" class="form-control-sm" oninput="search($(this).val())">
         </div>
     </div>
     <table class="table">
@@ -98,6 +98,7 @@
     </style>
     <script>
         function salonFilter(salon_id){
+            $('#client-filter').prop('selected', true);
             $.ajax({
                 url: '/clients/salon/filter/'+salon_id,
                 type: "GET",
@@ -114,6 +115,7 @@
         }
 
         function clientFilter(client_id){
+            $('#salon-filter').prop('selected', true);
             $.ajax({
                 url: '/clients/client/filter/'+client_id,
                 type: "GET",
@@ -151,6 +153,8 @@
         });
 
         function search(request){
+            $('#salon-filter').prop('selected', true);
+            $('#client-filter').prop('selected', true);
             $.ajax({
                 url: '/clients/search/'+request,
                 type: "GET",
