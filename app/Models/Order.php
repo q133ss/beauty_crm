@@ -63,6 +63,7 @@ class Order extends Model
     public function status($field)
     {
         return $this->join('order_status', 'order_status.id', 'orders.order_status_id')
+                ->where('order_status.id', $this->order_status_id)
                 ->pluck($field)
                 ->first();
     }

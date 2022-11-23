@@ -14,7 +14,9 @@ class OrdersController extends Controller
      */
     public function index()
     {
-        $orders = Order::getForSalon(Auth()->id())->withFilter('confirmed')->get();
+        $orders = Order::getForSalon(Auth()->id())
+            //->withFilter('confirmed')
+            ->get();
 
         return view('orders.index', compact('orders'));
     }
