@@ -4,6 +4,8 @@
     <link rel="stylesheet" href="/css/custom.css">
 @endsection
 @section('content')
+    <div class="alert alert-info">На этой странице отображены все заявки от клиентов на ваши услуги.
+        Вы можете воспользоваться поиском, а так же отфильтровать и отсортировать их</div>
     <div class="row">
         <div class="col">
             <div class="btn btn-outline-primary btn-fw">Добавить</div>
@@ -108,7 +110,7 @@
                 @endif
             </td>
             <td>
-                <a class="btn btn-outline-info btn-fw" href="#">Смотреть</a>
+                <a class="btn btn-outline-info btn-fw" href="{{route('orders.show', $order->id)}}">Смотреть</a>
                 <a class="btn btn-outline-warning btn-fw" href="#">Изменить</a>
             </td>
         </tr>

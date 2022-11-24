@@ -24,6 +24,11 @@ class Order extends Model
         return $day .'.'. $month .'.'. $year;
     }
 
+    public function getTime()
+    {
+        return mb_substr($this->time,0, 5);
+    }
+
     /**
      * Возвращает заказы для определенного юзера (салона)
      * @param $user_id

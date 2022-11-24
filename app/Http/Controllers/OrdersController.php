@@ -58,7 +58,9 @@ class OrdersController extends Controller
      */
     public function show($id)
     {
-        //
+        $order = Order::findOrFail($id);
+        #TODO Сделать проверку на заказ!! Принадлежит ли он юзеру
+        return view('orders.show', compact('order'));
     }
 
     /**

@@ -1,4 +1,4 @@
-@extends('layouts.app')
+{{--@extends('layouts.app')--}}
 @section('title', 'Просмотр клиента')
 @section('content')
     <ul class="list-arrow">
