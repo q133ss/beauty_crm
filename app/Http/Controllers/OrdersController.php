@@ -18,7 +18,15 @@ class OrdersController extends Controller
             //->withFilter('confirmed')
             ->get();
 
+        //Сортировка + фильтрация
+
         return view('orders.index', compact('orders'));
+    }
+
+    public function filter($field, $sort='id', $orientation='DESC')
+    {
+        $orders = Order::getForSalon(Auth()->id())->withFilter($field, $sort, $orientation)->get();
+        return view('ajax.orders.index', compact('orders'))->render();
     }
 
     /**

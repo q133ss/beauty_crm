@@ -9,8 +9,14 @@
             <div class="btn btn-outline-primary btn-fw">Добавить</div>
         </div>
         <div class="col">
-            <select name="" id="" class="form-select form-control">
-                <option value="">Фильтр</option>
+            <select name="" onchange="filter($(this).val())" id="" class="form-select form-control">
+                <option value="all">Все</option>
+                <option value="not_processed">Не обработанные</option>
+                <option value="confirmed">Подтвержденные</option>
+                <option value="rejected">Отклоненые</option>
+                <option value="waiting_for_payment">Ожидают оплату</option>
+                <option value="сompleted">Завершенные</option>
+                <option value="not_paid">Не оплаченные</option>
             </select>
         </div>
     </div>
@@ -66,7 +72,7 @@
             </th>
         </tr>
         </thead>
-        <tbody>
+        <tbody id="orders">
         @foreach($orders as $order)
         <tr>
             <td>
@@ -117,21 +123,60 @@
         $('.sort-col').click(function (){
             $('.sort-col').css('font-weight', '500')
             $(this).css('font-weight', '700')
-
-            let url = '';
             $('.sort-col').find('i').css('color', '#666666');
 
+            let params = (new URL(document.location)).searchParams;
+
+            field = params.get("filter"); //берем из урл
+            let sort = $(this).data('field');
+            let orientation = 'DESC';
+
+            if(!field){
+                field = 'all';
+            }
+
             if(lastOrder === 'ASC'){
-                url = 'ASC';
+                orientation = 'ASC';
                 lastOrder = 'DESC';
                 $(this).find('i.fa-arrow-up').css('color', '#ec37fc');
             }else{
-                url = 'DESC';
+                orientation = 'DESC';
                 lastOrder = 'ASC';
                 $(this).find('i.fa-arrow-down').css('color', '#ec37fc');
             }
 
-            console.log(url)
+            $.ajax({
+                url: '/orders/filter/'+field+'/'+sort+'/'+orientation,
+                type: "GET",
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                success: (data) => {
+                    $('#orders').html(data)
+                },
+                error: function (request, status, error) {
+                    //console.log(statusCode = request.responseText);
+                }
+            });
         });
+
+        //Фильтры
+        function filter(field){
+            history.pushState({}, '', '?filter='+field);
+
+            $.ajax({
+                url: '/orders/filter/'+field,
+                type: "GET",
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                success: (data) => {
+                    $('#orders').html(data)
+                },
+                error: function (request, status, error) {
+                    //console.log(statusCode = request.responseText);
+                }
+            });
+        }
     </script>
 @endsection

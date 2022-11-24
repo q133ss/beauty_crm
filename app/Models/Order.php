@@ -38,19 +38,23 @@ class Order extends Model
         });
     }
 
-    public function scopeWithFilter($query, $filter, $sort = 'DESC', $orientation = 'ASC')
+    /**
+     * Фильтры
+     * @param $query
+     * @param $filter
+     * @param $sort
+     * @param $orientation
+     * @return mixed
+     */
+    public function scopeWithFilter($query, $filter, $sort = 'id', $orientation = 'DESC')
     {
-        /*
-         * У нас будут, основные фильтры по полям accepted, rejected..
-         * Так же будут фильтры по всем
-         * Не обработанные тоже отдельное поле
-         *
-         * Не обработанные и все!
-         */
-
         if($filter != 'all'){
             $query->leftJoin('order_status', 'order_status.id', 'orders.order_status_id')
-                ->where('order_status.code', $filter);
+                ->where('order_status.code', $filter)
+                ->orderBy('orders.'.$sort, $orientation)
+                ->select('orders.*');
+        }else{
+            $query->orderBy('orders.'.$sort, $orientation);
         }
         return $query;
     }
