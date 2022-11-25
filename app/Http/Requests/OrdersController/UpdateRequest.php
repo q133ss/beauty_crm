@@ -1,8 +1,7 @@
 <?php
 
-namespace App\Http\Requests\RecordsController;
+namespace App\Http\Requests\OrdersController;
 
-use App\Models\Record;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateRequest extends FormRequest
@@ -27,18 +26,7 @@ class UpdateRequest extends FormRequest
         return [
             'date' => 'required|date_format:Y-m-d',
             'time' => 'required|date_format:H:i',
-            'service_id' => 'required|integer|exists:services,id'
-        ];
-    }
-
-    public function messages()
-    {
-        return [
-            'date.required' => 'Выберите дату',
-            'date.date_format' => 'Неверный формат даты',
-            'service_id.required' => 'Выберите услугу',
-            'service_id.integer' => 'Ошибка',
-            'service_id.exists' => 'Ошибка'
+            'service_id' => 'integer|exists:services,id'
         ];
     }
 }

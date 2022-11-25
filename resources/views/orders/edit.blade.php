@@ -1,8 +1,9 @@
 @extends('layouts.app')
-@section('title', 'Просмотр записи')
+@section('title', 'Изменить заказ')
 @section('meta')
     <script src="/datepicker/datepicker.min.js"></script>
     <link rel="stylesheet" href="/datepicker/datepicker.min.css">
+    <link rel="stylesheet" href="/css/custom.css">
 @endsection
 @section('content')
     @if ($errors->any())
@@ -12,30 +13,30 @@
             @endforeach
         </div>
     @endif
-    <form action="{{route('records.update', $record->id)}}" method="POST" class="d-inline">
-        @csrf
+    <form action="{{route('orders.update', $order->id)}}" class="bg-white rounded p-4" method="POST">
         @method('PUT')
-
+        @csrf
         <div class="form-group">
             <label>Дата</label>
-            <div class="form-control form-control-sm date-input" id="date-text">{{$record->getDate()}}</div>
-            <input type="hidden" id="date-input" class="form-control form-control-sm" value="{{$record->date}}" placeholder="" name="date">
+            <div class="form-control form-control-sm date-input" id="date-text">{{$order->getDate()}}</div>
+            <input type="hidden" id="date-input" class="form-control form-control-sm" value="{{$order->date}}" placeholder="" name="date">
         </div>
 
         <div class="form-group">
             <label>Время</label>
-            <input type="time" name="time" value="{{$record->timeFormatted()}}" class="form-control form-control-sm">
+            <input type="time" name="time" value="{{$order->getTime()}}" class="form-control form-control-sm">
         </div>
 
         <div class="form-group">
             <label for="service">Услуга</label>
             <select name="service_id" class="form-control" id="service">
                 @foreach($services as $service)
-                    <option value="{{$service->id}}" @if($service->id == $record->service_id) selected @endif>{{$service->name}}</option>
+                    <option value="{{$service->id}}" @if($service->id == $order->service_id) selected @endif>{{$service->name}}</option>
                 @endforeach
             </select>
         </div>
-        <button class="btn btn-info">Сохранить</button>
+
+        <button class="btn btn-outline-primary">Сохранить</button>
     </form>
 @endsection
 @section('scripts')
@@ -60,39 +61,4 @@
             }
         })
     </script>
-    <style>
-        .qs-datepicker{
-            color: #FFFFFF;
-        }
-        .qs-month-year:hover{
-            border-bottom: 1px solid #FFFFFF;
-        }
-        .qs-controls{
-            background-color: #ec37fc;
-        }
-        .qs-arrow:hover{
-            background: rgba(255, 255, 255, 0.4);
-        }
-        .qs-arrow.qs-left::after{
-            border-right-color: #FFFFFF;
-        }
-        .qs-arrow:hover.qs-right::after{
-            border-left-color: #FFFFFF;
-        }
-        .qs-arrow.qs-right::after{
-            border-left-color: #FFFFFF;
-        }
-        .qs-arrow:hover.qs-left::after{
-            border-right-color: #FFFFFF;
-        }
-        .qs-day{
-            color: #FFFFFF;
-        }
-        .qs-squares{
-            background-color: #ec37fc;
-        }
-        .qs-square:not(.qs-empty):not(.qs-disabled):not(.qs-day):not(.qs-active):hover{
-            background: rgba(255, 255, 255, 0.4);
-        }
-    </style>
 @endsection

@@ -1,6 +1,13 @@
 @extends('layouts.app')
 @section('title', 'Просмотр заказа')
 @section('content')
+    @if ($errors->any())
+        <div class="alert alert-danger">
+            @foreach ($errors->all() as $error)
+                <p class="text-danger">{{ $error }}</p>
+            @endforeach
+        </div>
+    @endif
     <div class="row">
         <div class="col-8">
             <div class="bg-white rounded p-4">
@@ -32,12 +39,36 @@
                     </li>
 
                 </ul>
-                <button class="btn btn-inverse-success">Принять</button>
-                <button class="btn btn-inverse-danger">Отклонить</button>
+                @if($order->order_status_id == 1)
+                <form action="{{route('orders.status.change', $order->id)}}" method="POST">
+                    @csrf
+                    <input type="hidden" name="order_status_id" value="2">
+                    <button class="btn btn-inverse-success">Принять</button>
+                </form>
+                <form action="{{route('orders.status.change', $order->id)}}" method="POST">
+                    @csrf
+                    <input type="hidden" name="order_status_id" value="3">
+                    <button class="btn btn-inverse-danger">Отклонить</button>
+                </form>
+                @elseif($order->order_status_id == 2)
+                    <form action="{{route('orders.status.change', $order->id)}}" class="d-flex align-items-center" method="POST">
+                        @csrf
+                        <input type="hidden" name="order_status_id" value="3">
+                        <p class="m-0">Вы <span class="text-success">приняли заказ</span>.</p>
+                        <button class="btn btn-link btn-fw">Отменить</button>
+                    </form>
+                @elseif($order->order_status_id == 3)
+                    <form action="{{route('orders.status.change', $order->id)}}" method="POST" class="d-flex align-items-center">
+                        @csrf
+                        <input type="hidden" name="order_status_id" value="2">
+                        <p class="m-0">Вы <span class="text-danger">отменили заказ</span>.</p>
+                        <button class="btn btn-link btn-fw">Принять</button>
+                    </form>
+                @endif
             </div>
         </div>
         <div class="col-4">
-            <div class="bg-white rounded p-4">
+            <div class="bg-white rounded p-4 h-100">
                 <h5>Контакты</h5>
                 <ul class="list-arrow">
                     <li>Телефон: {{$order->client->phone}}</li>

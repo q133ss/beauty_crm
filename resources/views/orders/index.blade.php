@@ -111,7 +111,7 @@
             </td>
             <td>
                 <a class="btn btn-outline-info btn-fw" href="{{route('orders.show', $order->id)}}">Смотреть</a>
-                <a class="btn btn-outline-warning btn-fw" href="#">Изменить</a>
+                <a class="btn btn-outline-warning btn-fw" href="{{route('orders.edit', $order->id)}}">Изменить</a>
             </td>
         </tr>
         @endforeach

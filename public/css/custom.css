@@ -26,3 +26,42 @@
 .sort-table-header .sort-col{
     cursor: pointer;
 }
+
+
+/*
+ * Календарь
+ */
+
+.qs-datepicker{
+    color: #FFFFFF;
+}
+.qs-month-year:hover{
+    border-bottom: 1px solid #FFFFFF;
+}
+.qs-controls{
+    background-color: #ec37fc;
+}
+.qs-arrow:hover{
+    background: rgba(255, 255, 255, 0.4);
+}
+.qs-arrow.qs-left::after{
+    border-right-color: #FFFFFF;
+}
+.qs-arrow:hover.qs-right::after{
+    border-left-color: #FFFFFF;
+}
+.qs-arrow.qs-right::after{
+    border-left-color: #FFFFFF;
+}
+.qs-arrow:hover.qs-left::after{
+    border-right-color: #FFFFFF;
+}
+.qs-day{
+    color: #FFFFFF;
+}
+.qs-squares{
+    background-color: #ec37fc;
+}
+.qs-square:not(.qs-empty):not(.qs-disabled):not(.qs-day):not(.qs-active):hover{
+    background: rgba(255, 255, 255, 0.4);
+}

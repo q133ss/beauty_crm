@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\OrdersController\UpdateRequest;
+use App\Http\Requests\OrdersController\UpdateStatusRequest;
 use App\Models\Order;
+use App\Models\Service;
 use Illuminate\Http\Request;
 
 class OrdersController extends Controller
@@ -18,8 +21,6 @@ class OrdersController extends Controller
             //->withFilter('confirmed')
             ->get();
 
-        //Сортировка + фильтрация
-
         return view('orders.index', compact('orders'));
     }
 
@@ -27,6 +28,13 @@ class OrdersController extends Controller
     {
         $orders = Order::getForSalon(Auth()->id())->withFilter($field, $sort, $orientation)->get();
         return view('ajax.orders.index', compact('orders'))->render();
+    }
+
+    public function updateStatus($id, UpdateStatusRequest $request)
+    {
+        #TODO проверка заказа!!!!!!!
+        Order::find($id)->update($request->validated());
+        return to_route('orders.index')->withSuccess('Статус заказа успешно изменен');
     }
 
     /**
@@ -71,7 +79,10 @@ class OrdersController extends Controller
      */
     public function edit($id)
     {
-        //
+        $order = Order::findOrfail($id);
+        $services = Service::getForSalon(Auth()->user()->salons->pluck('id')->all())->get();
+        #TODO сделать проверку на ордер
+        return view('orders.edit', compact('order', 'services'));
     }
 
     /**
@@ -81,9 +92,10 @@ class OrdersController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(UpdateRequest $request, $id)
     {
-        //
+        Order::findOrFail($id)->update($request->validated());
+        return to_route('orders.index')->withSuccess('Запись успешно обновлена');
     }
 
     /**
