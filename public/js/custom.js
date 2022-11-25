@@ -1,5 +1,10 @@
-import {last} from "lodash";
+function choiceClient(value){
+    $('#old-client').hide()
+    $('#new-client').hide()
+    $('#'+value+'-client').show()
+}
 
+////
 let social_count = 0;
 function addSocial() {
     social_count++;
