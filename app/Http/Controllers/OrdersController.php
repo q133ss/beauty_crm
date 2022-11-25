@@ -17,10 +17,7 @@ class OrdersController extends Controller
      */
     public function index()
     {
-        $orders = Order::getForSalon(Auth()->id())
-            //->withFilter('confirmed')
-            ->get();
-
+        $orders = Order::getForSalon(Auth()->id())->get();
         return view('orders.index', compact('orders'));
     }
 
@@ -32,9 +29,12 @@ class OrdersController extends Controller
 
     public function updateStatus($id, UpdateStatusRequest $request)
     {
-        #TODO проверка заказа!!!!!!!
-        Order::find($id)->update($request->validated());
-        return to_route('orders.index')->withSuccess('Статус заказа успешно изменен');
+        $order = Order::find($id);
+        if($order->checkAccess(Auth()->id())) {
+            $order->update($request->validated());
+            return to_route('orders.index')->withSuccess('Статус заказа успешно изменен');
+        }
+        abort(403);
     }
 
     /**
@@ -44,7 +44,9 @@ class OrdersController extends Controller
      */
     public function create()
     {
-        //
+        $services = Service::getForSalon(Auth()->user()->salons->pluck('id')->all())->get();
+        $clients = Auth()->user()->getClients();
+        return view('orders.create', compact('services', 'clients'));
     }
 
     /**
@@ -67,8 +69,10 @@ class OrdersController extends Controller
     public function show($id)
     {
         $order = Order::findOrFail($id);
-        #TODO Сделать проверку на заказ!! Принадлежит ли он юзеру
-        return view('orders.show', compact('order'));
+        if($order->checkAccess(Auth()->id())) {
+            return view('orders.show', compact('order'));
+        }
+        abort(403);
     }
 
     /**
@@ -81,8 +85,10 @@ class OrdersController extends Controller
     {
         $order = Order::findOrfail($id);
         $services = Service::getForSalon(Auth()->user()->salons->pluck('id')->all())->get();
-        #TODO сделать проверку на ордер
-        return view('orders.edit', compact('order', 'services'));
+        if($order->checkAccess(Auth()->id())) {
+            return view('orders.edit', compact('order', 'services'));
+        }
+        abort(403);
     }
 
     /**
@@ -94,18 +100,11 @@ class OrdersController extends Controller
      */
     public function update(UpdateRequest $request, $id)
     {
-        Order::findOrFail($id)->update($request->validated());
-        return to_route('orders.index')->withSuccess('Запись успешно обновлена');
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
+        $order = Order::findOrFail($id);
+        if($order->checkAccess(Auth()->id())) {
+            $order->update($request->validated());
+            return to_route('orders.index')->withSuccess('Запись успешно обновлена');
+        }
+        abort(403);
     }
 }

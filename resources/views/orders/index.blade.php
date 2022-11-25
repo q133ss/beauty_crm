@@ -8,7 +8,7 @@
         Вы можете воспользоваться поиском, а так же отфильтровать и отсортировать их</div>
     <div class="row">
         <div class="col">
-            <div class="btn btn-outline-primary btn-fw">Добавить</div>
+            <a href="{{route('orders.create')}}" class="btn btn-outline-primary btn-fw">Добавить</a>
         </div>
         <div class="col">
             <select name="" onchange="filter($(this).val())" id="" class="form-select form-control">

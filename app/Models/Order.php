@@ -76,4 +76,16 @@ class Order extends Model
                 ->pluck($field)
                 ->first();
     }
+
+    /**
+     * Проверяет, доступен ли этот заказ для юзера (салона)
+     * @param $user_id
+     * @return mixed
+     */
+    public function checkAccess($user_id)
+    {
+        return $this->join('user_salon', 'user_salon.salon_id', 'orders.salon_id')
+                    ->where('user_salon.user_id', $user_id)
+                    ->exists();
+    }
 }
