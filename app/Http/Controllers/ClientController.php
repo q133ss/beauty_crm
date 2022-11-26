@@ -18,43 +18,8 @@ class ClientController extends Controller
     public function index()
     {
         $user = Auth()->user();
-        $clients = $user->clients();
-        $salons = $user->salons;
-        return view('clients.index', compact('clients','salons'));
-    }
-
-    public function getContacts($id)
-    {
-        $client = User::findOrFail($id);
-        if(Auth()->user()->checkClient($id)) {
-            return view('ajax.clients.contacts', compact('client'));
-        }else{
-            return false;
-        }
-    }
-
-    public function salonFilter($salon_id)
-    {
-        $user = Auth()->user();
-        $clients = $user->clientsSalonFilter($salon_id);
-        $salons = $user->salons;
-        return view('ajax.clients.index', compact('clients','salons'));
-    }
-
-    public function clientFilter($client_id)
-    {
-        $user = Auth()->user();
-        $clients = $user->clientsFilter($client_id);
-        $salons = $user->salons;
-        return view('ajax.clients.index', compact('clients','salons'));
-    }
-
-    public function search($request)
-    {
-        $user = Auth()->user();
-        $clients = $user->clientsSearch($request);
-        $salons = $user->salons;
-        return view('ajax.clients.index', compact('clients','salons'));
+        $clients = $user->getClients();
+        return view('clients.index', compact('clients'));
     }
 
     /**
@@ -111,6 +76,12 @@ class ClientController extends Controller
         }else{
             abort(403);
         }
+    }
+
+    public function getContact($client_id)
+    {
+        $contacts = User::find($client_id);
+        return view('ajax.clients.contacts', compact('contacts'));
     }
 
     /**

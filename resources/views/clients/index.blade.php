@@ -1,79 +1,92 @@
 @extends('layouts.app')
-@section('title', 'База клиентов')
+@section('title', 'Клиенты')
 @section('meta')
+    <link rel="stylesheet" href="/css/custom.css">
     <meta name="csrf-token" content="{{ csrf_token() }}" />
 @endsection
 @section('content')
-    <div class="row col">
-        <div class="alert alert-info alert-dismissible fade show" role="alert">
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-            На этой странице отображен список всех активных клиентов.
-            Клиенты которые давно не пользовались вашими услугами находятся в разделе
-            <a href="#">Спящие клиенты</a>
+    <div class="alert alert-info">На этой странице отображены все заявки от клиентов на ваши услуги.
+        Вы можете воспользоваться поиском, а так же отфильтровать и отсортировать их</div>
+    <div class="row">
+        <div class="col">
+            <a href="{{route('orders.create')}}" class="btn btn-outline-primary btn-fw">Добавить</a>
         </div>
-        <a href="{{route('clients.create')}}" class="btn btn-sm btn-success" style="align-self: center">Добавить</a>
-
-        <div class="col" style="align-self: center">
-            <select name="" style="align-self: center" onchange="salonFilter($(this).val())" class="form-control" id="">
-                <option value="" id="salon-filter" disabled selected>Салон</option>
-                @foreach($salons as $salon)
-                    <option value="{{$salon->id}}">{{$salon->name}}</option>
-                @endforeach
+        <div class="col">
+            <select name="" onchange="filter($(this).val())" id="" class="form-select form-control" style="padding: .375rem 2.25rem .375rem .75rem">
+                <option value="all">Салон</option>
             </select>
         </div>
-
-        <div class="col" style="align-self: center">
-            <select name="" style="align-self: center" onchange="clientFilter($(this).val())" class="form-control" id="">
-                <option value="" id="client-filter" disabled selected>Клиент</option>
-                @foreach($clients as $client)
-                    <option value="{{$client->id}}">{{$client->name}}</option>
-                @endforeach
-            </select>
-        </div>
-
-        <div class="col" style="align-self: center">
-            <input type="text" id="search" placeholder="Поиск" style="border: 0" class="form-control-sm" oninput="search($(this).val())">
+        <div class="col">
+            <input type="text" placeholder="Поиск" class="form-select">
         </div>
     </div>
-    <table class="table">
+
+    <table class="table mt-3">
         <thead>
-        <tr class="clients-table_header">
-            <th>№</th>
-            <th>Фото</th>
-            <th>Имя</th>
-            <th>Салон</th>
-            <th>Дата последнего заказа</th>
-            <th>Контакты</th>
-            <th>Действия</th>
+        <tr class="sort-table-header">
+            <th class="sort-col" data-field="id">
+                №
+                <div class="table-sort-arrows">
+                    <i class="fa fa-arrow-up"></i>
+                    <i class="fa fa-arrow-down"></i>
+                </div>
+            </th>
+            <th>
+                Фото
+            </th>
+            <th class="sort-col" data-field="name">
+                Имя
+                <div class="table-sort-arrows">
+                    <i class="fa fa-arrow-up"></i>
+                    <i class="fa fa-arrow-down"></i>
+                </div>
+            </th>
+            <th class="sort-col" data-field="lastOrder" data-toggle="tooltip" data-placement="top" title="Дата, в которую клиент создал последний заказ">
+                Последний заказ
+                <div class="table-sort-arrows">
+                    <i class="fa fa-arrow-up"></i>
+                    <i class="fa fa-arrow-down"></i>
+                </div>
+            </th>
+
+            <th>
+                Контакты
+            </th>
+
+            <th>
+                Действия
+            </th>
         </tr>
         </thead>
-        <tbody id="records">
+        <tbody id="orders">
         @foreach($clients as $client)
-            <tr>
-                <td>{{$client->id}}</td>
-                <td><img src="{{$client->avatar()}}" width="100px" alt=""></td>
-                <td>{{$client->name}}</td>
-                <td>
-                    <a href="#">{{$client->lastOrderSalon() ? $client->lastOrderSalon()->name : 'Ошибка'}}</a>
-                </td>
-                <td>{{mb_substr($client->lastOrder()->created_at,0,16)}}</td>
-                <td>
-                    <button type="button" class="btn btn-sm btn-primary" onclick="getContacts('{{$client->id}}')" data-toggle="modal" data-target="#contactModal">
-                        Смотреть
-                    </button>
-                </td>
-                <td>
-                    <a href="{{route('clients.show', $client->id)}}" class="btn btn-info btn-sm">Смотреть</a>
-                    <a href="{{route('clients.edit', $client->id)}}" class="btn btn-warning btn-sm">Изменить</a>
-                </td>
-            </tr>
+        <tr>
+            <td>
+                {{$client->id}}
+            </td>
+            <td>
+                <img src="{{$client->avatar()}}" width="100px" alt="">
+            </td>
+            <td>
+                {{$client->name}}
+            </td>
+            <td>
+                {{$client->lastOrderDate() ? $client->lastOrderDate() : 'Нет заказов'}}
+            </td>
+            <td>
+                <button class="btn btn-outline-info" onclick="getContact('{{$client->id}}')">Контакты</button>
+            </td>
+            <td>
+                <button class="btn btn-outline-success">Смотерть</button>
+                <button class="btn btn-outline-warning">Изменить</button>
+            </td>
+        </tr>
         @endforeach
         </tbody>
     </table>
+@endsection
+@section('scripts')
 
-    <!-- Modal -->
     <div class="modal fade" id="contactModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -83,88 +96,90 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <div class="modal-body" id="contact-modal">
-
+                <div class="modal-body" id="contactBody">
                 </div>
             </div>
         </div>
     </div>
-@endsection
-@section('scripts')
-    <style>
-        .clients-table_header th{
-            cursor: pointer;
-        }
-    </style>
+
     <script>
-        function salonFilter(salon_id){
-            $('#client-filter').prop('selected', true);
+        //Tooltip
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip()
+        })
+        //Сортировка
+        let lastOrder = 'ASC';
+        $('.sort-col').click(function (){
+            $('.sort-col').css('font-weight', '500')
+            $(this).css('font-weight', '700')
+            $('.sort-col').find('i').css('color', '#666666');
+
+            let params = (new URL(document.location)).searchParams;
+
+            field = params.get("filter"); //берем из урл
+            let sort = $(this).data('field');
+            let orientation = 'DESC';
+
+            if(!field){
+                field = 'all';
+            }
+
+            if(lastOrder === 'ASC'){
+                orientation = 'ASC';
+                lastOrder = 'DESC';
+                $(this).find('i.fa-arrow-up').css('color', '#ec37fc');
+            }else{
+                orientation = 'DESC';
+                lastOrder = 'ASC';
+                $(this).find('i.fa-arrow-down').css('color', '#ec37fc');
+            }
+
             $.ajax({
-                url: '/clients/salon/filter/'+salon_id,
+                url: '/orders/filter/'+field+'/'+sort+'/'+orientation,
                 type: "GET",
-                headers:{
+                headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
                 success: (data) => {
-                    $('#records').html(data)
+                    $('#orders').html(data)
                 },
-                error: function(request, status, error) {
+                error: function (request, status, error) {
                     //console.log(statusCode = request.responseText);
                 }
             });
-        }
-
-        function clientFilter(client_id){
-            $('#salon-filter').prop('selected', true);
-            $.ajax({
-                url: '/clients/client/filter/'+client_id,
-                type: "GET",
-                headers:{
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                success: (data) => {
-                    $('#records').html(data)
-                },
-                error: function(request, status, error) {
-                    //console.log(statusCode = request.responseText);
-                }
-            });
-        }
-
-        function getContacts(id){
-            $.ajax({
-                url: '/clients/'+id+'/contact/',
-                type: "GET",
-                headers:{
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                success: (data) => {
-                    $('#contact-modal').html(data)
-                },
-                error: function(request, status, error) {
-                    //console.log(statusCode = request.responseText);
-                }
-            });
-        }
-
-        $('.clients-table_header>th').click(function (){
-            $('.clients-table_header>th').css('font-weight','500');
-            $(this).css('font-weight','700');
         });
 
-        function search(request){
-            $('#salon-filter').prop('selected', true);
-            $('#client-filter').prop('selected', true);
+        //Фильтры
+        function filter(field){
+            history.pushState({}, '', '?filter='+field);
+
             $.ajax({
-                url: '/clients/search/'+request,
+                url: '/orders/filter/'+field,
                 type: "GET",
-                headers:{
+                headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
                 success: (data) => {
-                    $('#records').html(data)
+                    $('#orders').html(data)
                 },
-                error: function(request, status, error) {
+                error: function (request, status, error) {
+                    //console.log(statusCode = request.responseText);
+                }
+            });
+        }
+
+        function getContact($client_id){
+            $.ajax({
+                url: 'clients/'+$client_id+'/get-contact',
+                type: "POST",
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                success: (data) => {
+                    $('#contactBody').html(data)
+                    $('#contactModal').modal('show')
+                },
+                error: function (request, status, error) {
                     //console.log(statusCode = request.responseText);
                 }
             });

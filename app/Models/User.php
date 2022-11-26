@@ -127,4 +127,16 @@ class User extends Authenticatable implements MustVerifyEmail
         })
         ->get();
     }
+
+    /**
+     * Возвращает дату последнего заказа
+     * @return mixed
+     */
+    public function lastOrderDate()
+    {
+        return $this->join('orders', 'orders.client_id', 'users.id')
+            ->where('orders.client_id', $this->id)
+            ->orderBy('orders.created_at', 'DESC')
+            ->pluck('orders.created_at')->first();
+    }
 }
