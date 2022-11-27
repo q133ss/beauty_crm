@@ -9,7 +9,7 @@
         Вы можете воспользоваться поиском, а так же отфильтровать и отсортировать их</div>
     <div class="row">
         <div class="col">
-            <a href="{{route('orders.create')}}" class="btn btn-outline-primary btn-fw">Добавить</a>
+            <a href="{{route('clients.create')}}" class="btn btn-outline-primary btn-fw">Добавить</a>
         </div>
         <div class="col">
             <select name="" onchange="filter($(this).val())" id="" class="form-select form-control" style="padding: .375rem 2.25rem .375rem .75rem">
@@ -77,8 +77,8 @@
                 <button class="btn btn-outline-info" onclick="getContact('{{$client->id}}')">Контакты</button>
             </td>
             <td>
-                <button class="btn btn-outline-success">Смотерть</button>
-                <button class="btn btn-outline-warning">Изменить</button>
+                <a href="{{route('clients.show', $client->id)}}" class="btn btn-outline-success">Смотерть</a>
+                <a href="{{route('clients.edit', $client->id)}}" class="btn btn-outline-warning">Изменить</a>
             </td>
         </tr>
         @endforeach

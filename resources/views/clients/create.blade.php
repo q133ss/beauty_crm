@@ -8,7 +8,7 @@
             @endforeach
         </div>
     @endif
-    <form action="{{route('clients.store')}}" method="POST">
+    <form action="{{route('clients.store')}}" class="bg-white rounded p-4" method="POST">
         @csrf
         <div class="form-group">
             <label for="name">Имя</label>
@@ -32,7 +32,7 @@
 
         <div class="form-group">
             <label for="salon">Салон</label>
-            <select name="salon_id" id="salon">
+            <select name="salon_id" id="salon" class="form-select form-control">
                 @foreach($salons as $salon)
                     <option value="{{$salon->id}}">{{$salon->name}}</option>
                 @endforeach

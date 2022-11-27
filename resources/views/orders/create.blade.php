@@ -37,6 +37,7 @@
 
         <label for="#">Клиент</label>
 
+        @if(!\Request()->has('user'))
         <div class="form-group">
             <div class="form-check">
                 <label for="old" class="form-check-label">
@@ -45,7 +46,6 @@
                 </label>
             </div>
         </div>
-
         <div class="form-group">
             <div class="form-check">
                 <label for="new" class="form-check-label">
@@ -64,7 +64,6 @@
             </select>
         </div>
 
-
         <div id="new-client" style="display: none">
             <span class="font-weight-bold">Создать нового клиента</span>
             <div class="form-group mt-2">
@@ -77,6 +76,15 @@
                 <input type="text" class="form-control" id="phone" name="phone">
             </div>
         </div>
+
+        @else
+
+            <input type="hidden" name="client_id" value="{{Request()->user}}">
+            <div class="form-control mb-4">
+                {{App\Models\User::find(Request()->user) ? App\Models\User::find(Request()->user)->name : 'Ошибка'}}
+            </div>
+
+        @endif
 
         <button class="btn btn-outline-primary">Сохранить</button>
     </form>

@@ -107,6 +107,17 @@ class User extends Authenticatable implements MustVerifyEmail
         return date('H:i',array_sum($time_sum));
     }
 
+    public function getClientSum($client_id, $field)
+    {
+        $query = $this->join('user_order', 'user_order.user_id','users.id')
+                ->where('users.id', $client_id)
+                ->join('orders', 'orders.id', 'user_order.order_id')
+                ->where('orders.client_id', $client_id)
+                ->pluck($field)
+                ->all();
+        return array_sum($query);
+    }
+
     public function salons()
     {
         return $this->belongsToMany(Salon::class, 'user_salon', 'user_id', 'salon_id');
@@ -138,5 +149,31 @@ class User extends Authenticatable implements MustVerifyEmail
             ->where('orders.client_id', $this->id)
             ->orderBy('orders.created_at', 'DESC')
             ->pluck('orders.created_at')->first();
+    }
+
+    /**
+     * Проверяет, относиться ли салон к клиенту
+     * @param $salon_id
+     * @return mixed
+     */
+    public function checkSalon($salon_id)
+    {
+        return $this->join('user_salon', 'user_salon.user_id', 'users.id')
+                    ->where('user_salon.salon_id', $salon_id)
+                    ->where('user_salon.user_id', $this->id)
+                    ->where('user_salon.is_client', false)
+                    ->exists();
+    }
+
+    public function checkClient($client_id)
+    {
+        return $this->where('id', function ($query) use ($client_id){
+            $query->select('user_id')
+                ->from('user_salon')
+                ->whereIn('salon_id', $this->salons->pluck('id')->all())
+                ->where('user_id', $client_id)
+                ->where('is_client', true)
+                ->limit(1);
+        })->exists();
     }
 }

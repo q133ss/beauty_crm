@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\DB;
 
 class StoreService{
     public static function store($data){
-        $data['password'] = '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi';
+        $data['password'] = '$2y$10$a2IpUNpkjO0rOi5byk0.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi';
 
         $socials = [];
         foreach ($data['social_name'] as $key => $name){

@@ -32,7 +32,8 @@ class StoreRequest extends FormRequest
                 'integer',
                 'exists:salons,id',
                 function($attribute, $value, $fail){
-                    abort_if(!Auth()->user()->salonCheck($value), 403);
+                    //Проверка, принадлежит ли салон юзеру
+                    abort_if(!Auth()->user()->checkSalon($value), 403);
                 }
             ],
             'social_name' => 'nullable|array',

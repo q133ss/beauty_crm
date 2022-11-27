@@ -1,40 +1,40 @@
-{{--@extends('layouts.app')--}}
+@extends('layouts.app')
 @section('title', 'Просмотр клиента')
 @section('content')
-    <ul class="list-arrow">
-        <img src="{{$client->avatar()}}" style="max-width: 300px" alt=""> <br>
-        <h3 class="mt-3">Информация</h3>
-        <table class="table table-bordered">
-            <tbody>
+<div class="bg-white rounded p-4">
+    <h3>Фото</h3>
+    <img src="{{$client->avatar()}}" style="max-width: 300px" alt=""> <br>
+    <h3 class="mt-3">Контакты</h3>
+    <table class="table table-bordered mb-4">
+        <tbody>
+        <tr>
+            <td>
+                Имя
+            </td>
+            <td>
+                {{$client->name}}
+            </td>
+        </tr>
+
+        @if($client->socials())
+        @foreach($client->socials() as $key => $social)
             <tr>
                 <td>
-                    Имя
+                    {{$key}}
                 </td>
                 <td>
-                    {{$client->name}}
+                    {{$social}}
                 </td>
             </tr>
+        @endforeach
+        @endif
+        </tbody>
+    </table>
 
-            @if($client->socials())
-            <tr>
-                <td>
-                    @foreach($client->socials() as $key => $social)
-                        {{$key}}
-                    @endforeach
-                </td>
-                <td>
-                    @foreach($client->socials() as $key => $social)
-                        {{$social}}
-                    @endforeach
-                </td>
-            </tr>
-            @endif
-            </tbody>
-        </table>
-
-    </ul>
+    <h3>Заметка</h3>
+    <blockquote class="blockquote"><p class="mb-0">{{$client->note}}</p></blockquote>
     <button class="btn btn-outline-info btn-fw">Связаться с клиентом</button>
-    <a href="{{route('records.create', 'user='.$client->id)}}" class="btn btn-outline-primary btn-fw">Создать запись</a>
+    <a href="{{route('orders.create', 'user='.$client->id)}}" class="btn btn-outline-primary btn-fw">Создать запись</a>
 
     <h3 class="mt-4">Статистика</h3>
 
@@ -46,7 +46,7 @@
                 Клиент оплатил услуг на:
             </td>
             <td>
-                {{Auth()->user()->getSum($client->id, 'price')}}
+                {{Auth()->user()->getClientSum($client->id, 'price')}}
                 ₽
             </td>
         </tr>
@@ -92,7 +92,7 @@
         @endforeach
         </tbody>
     </table>
-
+</div>
 @endsection
 @section('scripts')
     <script src="/vendors/base/vendor.bundle.base.js"></script>
