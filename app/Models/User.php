@@ -218,6 +218,10 @@ class User extends Authenticatable implements MustVerifyEmail
 
             case 'search':
                 $query->where('users.name', 'LIKE', '%'.$request->search.'%');
+//                    ->orWhere('users.note', 'LIKE', '%'.$request->search.'%')
+//                    ->orWhere('users.phone', 'LIKE', '%'.$request->search.'%')
+//                    ->orWhere('users.telegram', 'LIKE', '%'.$request->search.'%')
+//                    ->orWhere('users.socials', 'LIKE', '%'.$request->search.'%');
         }
         return $this->filterSort($query, $sort, $orientation, $request);
     }

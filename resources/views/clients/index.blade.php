@@ -87,10 +87,10 @@
         @endforeach
         </tbody>
     </table>
+    <input type="hidden" id="currentFilterVal">
+    <input type="hidden" id="currentFilter">
 @endsection
 @section('scripts')
-
-    <input type="hidden" id="currentFilter">
     <div class="modal fade" id="contactModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -122,18 +122,19 @@
             let orientation = 'DESC';
 
             let filterInput = $('#currentFilter');
-            let filterType = filterInput.data('filter');
+            let filterType = filterInput.val();
 
-            let data;
-            if(filterType === 'salon'){
+            let filterVal = $('#currentFilterVal').val()
+
+            let data = 'salon_id';
+
+            if(filterType == 'salon'){
                 data = {
-                    'salon_id': filterInput.val()
+                    'salon_id': filterVal
                 };
-            }
-
-            if(filterType === 'search'){
+            }else{
                 data = {
-                    'search': filterInput.val()
+                    'search': filterVal
                 }
             }
 
@@ -164,8 +165,8 @@
         });
 
         function filter(salon_id){
-            $('#currentFilter').attr('data-filter', 'salon');
-            $('#currentFilter').val(salon_id);
+            $('#currentFilter').val('salon');
+            $('#currentFilterVal').val(salon_id);
 
             $.ajax({
                 url: '/clients/salon/',
@@ -186,8 +187,8 @@
         }
 
         function search(query){
-            $('#currentFilter').attr('data-filter', 'search');
-            $('#currentFilter').val(query);
+            $('#currentFilter').val('search');
+            $('#currentFilterVal').val(query);
 
             $.ajax({
                 url: '/clients/search/',

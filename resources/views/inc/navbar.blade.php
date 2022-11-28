@@ -35,12 +35,12 @@
     </li>
 
     <li class="nav-item">
-        <a class="nav-link" data-toggle="collapse" href="#ui-basic" aria-expanded="false" aria-controls="ui-basic">
+        <a class="nav-link" data-toggle="collapse" href="#service_menu" aria-expanded="false" aria-controls="ui-basic">
             <i class="icon-disc menu-icon"></i>
             <span class="menu-title">Услуги</span>
             <i class="menu-arrow"></i>
         </a>
-        <div class="collapse" id="ui-basic">
+        <div class="collapse" id="service_menu">
             <ul class="nav flex-column sub-menu">
                 <li class="nav-item"> <a class="nav-link" href="pages/ui-features/buttons.html">Услуги</a></li>
                 <li class="nav-item"> <a class="nav-link" href="pages/ui-features/typography.html">Категории</a></li>
@@ -64,12 +64,12 @@
 
 
     <li class="nav-item">
-        <a class="nav-link" data-toggle="collapse" href="#ui-basic" aria-expanded="false" aria-controls="ui-basic">
+        <a class="nav-link" data-toggle="collapse" href="#finance-menu" aria-expanded="false" aria-controls="ui-basic">
             <i class="icon-disc menu-icon"></i>
             <span class="menu-title">Финансы</span>
             <i class="menu-arrow"></i>
         </a>
-        <div class="collapse" id="ui-basic">
+        <div class="collapse" id="finance-menu">
             <ul class="nav flex-column sub-menu">
                 <li class="nav-item"> <a class="nav-link" href="pages/ui-features/buttons.html">Доходы</a></li>
                 <li class="nav-item"> <a class="nav-link" href="pages/ui-features/typography.html">Расходы</a></li>
@@ -92,12 +92,12 @@
     </li>
 
     <li class="nav-item">
-        <a class="nav-link" data-toggle="collapse" href="#ui-basic" aria-expanded="false" aria-controls="ui-basic">
+        <a class="nav-link" data-toggle="collapse" href="#settings-menu" aria-expanded="false" aria-controls="ui-basic">
             <i class="icon-disc menu-icon"></i>
             <span class="menu-title">Настройки</span>
             <i class="menu-arrow"></i>
         </a>
-        <div class="collapse" id="ui-basic">
+        <div class="collapse" id="settings-menu">
             <ul class="nav flex-column sub-menu">
                 <li class="nav-item"> <a class="nav-link" href="pages/ui-features/buttons.html">Салон</a></li>
                 <li class="nav-item"> <a class="nav-link" href="pages/ui-features/typography.html">Аккаунт</a></li>
