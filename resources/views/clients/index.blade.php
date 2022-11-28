@@ -14,10 +14,13 @@
         <div class="col">
             <select name="" onchange="filter($(this).val())" id="" class="form-select form-control" style="padding: .375rem 2.25rem .375rem .75rem">
                 <option value="all">Салон</option>
+                @foreach($user->salons as $salon)
+                    <option value="{{$salon->id}}">{{$salon->name}}</option>
+                @endforeach
             </select>
         </div>
         <div class="col">
-            <input type="text" placeholder="Поиск" class="form-select">
+            <input type="text" oninput="search($(this).val())" placeholder="Поиск" class="form-select">
         </div>
     </div>
 
@@ -58,8 +61,8 @@
             </th>
         </tr>
         </thead>
-        <tbody id="orders">
-        @foreach($clients as $client)
+        <tbody id="clients">
+        @foreach($user->getClients() as $client)
         <tr>
             <td>
                 {{$client->id}}
@@ -87,6 +90,7 @@
 @endsection
 @section('scripts')
 
+    <input type="hidden" id="currentFilter">
     <div class="modal fade" id="contactModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -114,14 +118,23 @@
             $(this).css('font-weight', '700')
             $('.sort-col').find('i').css('color', '#666666');
 
-            let params = (new URL(document.location)).searchParams;
-
-            field = params.get("filter"); //берем из урл
             let sort = $(this).data('field');
             let orientation = 'DESC';
 
-            if(!field){
-                field = 'all';
+            let filterInput = $('#currentFilter');
+            let filterType = filterInput.data('filter');
+
+            let data;
+            if(filterType === 'salon'){
+                data = {
+                    'salon_id': filterInput.val()
+                };
+            }
+
+            if(filterType === 'search'){
+                data = {
+                    'search': filterInput.val()
+                }
             }
 
             if(lastOrder === 'ASC'){
@@ -135,13 +148,14 @@
             }
 
             $.ajax({
-                url: '/orders/filter/'+field+'/'+sort+'/'+orientation,
-                type: "GET",
+                url: '/clients/'+filterType+'/'+sort+'/'+orientation,
+                type: "POST",
+                data: data,
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
                 success: (data) => {
-                    $('#orders').html(data)
+                    $('#clients').html(data)
                 },
                 error: function (request, status, error) {
                     //console.log(statusCode = request.responseText);
@@ -149,18 +163,21 @@
             });
         });
 
-        //Фильтры
-        function filter(field){
-            history.pushState({}, '', '?filter='+field);
+        function filter(salon_id){
+            $('#currentFilter').attr('data-filter', 'salon');
+            $('#currentFilter').val(salon_id);
 
             $.ajax({
-                url: '/orders/filter/'+field,
-                type: "GET",
+                url: '/clients/salon/',
+                type: "POST",
+                data: {
+                  'salon_id': salon_id
+                },
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
                 success: (data) => {
-                    $('#orders').html(data)
+                     $('#clients').html(data)
                 },
                 error: function (request, status, error) {
                     //console.log(statusCode = request.responseText);
@@ -168,9 +185,31 @@
             });
         }
 
-        function getContact($client_id){
+        function search(query){
+            $('#currentFilter').attr('data-filter', 'search');
+            $('#currentFilter').val(query);
+
             $.ajax({
-                url: 'clients/'+$client_id+'/get-contact',
+                url: '/clients/search/',
+                type: "POST",
+                data: {
+                    'search': query
+                },
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                success: (data) => {
+                    $('#clients').html(data)
+                },
+                error: function (request, status, error) {
+                    //console.log(statusCode = request.responseText);
+                }
+            });
+        }
+
+        function getContact(client_id){
+            $.ajax({
+                url: 'clients/'+client_id+'/get-contact',
                 type: "POST",
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')

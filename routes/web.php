@@ -24,7 +24,8 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 Route::middleware('permission')->middleware('verified')->group(function (){
     Route::get('/', [App\Http\Controllers\IndexController::class, 'index']);
 
-    Route::post('clients/{id}/get-contact', [App\Http\Controllers\ClientController::class, 'getContact']);
+    Route::post('/clients/{id}/get-contact', [App\Http\Controllers\ClientController::class, 'getContact']);
+    Route::post('/clients/{filter}/{sort?}/{orientation?}', [App\Http\Controllers\ClientController::class, 'filter']);
     Route::resource('clients', App\Http\Controllers\ClientController::class);
 
     Route::get('/orders/filter/{field}/{sort?}/{orientation?}', [App\Http\Controllers\OrdersController::class, 'filter']);

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ClientController\FilterRequest;
 use App\Http\Requests\ClientController\StoreRequest;
 use App\Http\Requests\ClientController\UpdateRequest;
 use App\Models\User;
@@ -17,9 +18,8 @@ class ClientController extends Controller
      */
     public function index()
     {
-        $user = Auth()->user();
-        $clients = $user->getClients();
-        return view('clients.index', compact('clients'));
+        $user = Auth()->user()->load('salons');
+        return view('clients.index', compact('user'));
     }
 
     /**
@@ -76,6 +76,12 @@ class ClientController extends Controller
         }else{
             abort(403);
         }
+    }
+
+    public function filter(FilterRequest $request, $filter, $sort='id', $orientation='DESC')
+    {
+        $clients = User::withFilter($request, $filter, $sort, $orientation);
+        return view('ajax.clients.index', compact('clients'));
     }
 
     public function getContact($client_id)

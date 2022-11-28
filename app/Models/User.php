@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Http\Request;
 use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable implements MustVerifyEmail
@@ -165,6 +166,11 @@ class User extends Authenticatable implements MustVerifyEmail
                     ->exists();
     }
 
+    private function isJoined($query, $table){
+        $joins = collect($query->getQuery()->joins);
+        return $joins->pluck('table')->contains($table);
+    }
+
     public function checkClient($client_id)
     {
         return $this->where('id', function ($query) use ($client_id){
@@ -176,4 +182,44 @@ class User extends Authenticatable implements MustVerifyEmail
                 ->limit(1);
         })->exists();
     }
+
+    private function filterSort($query, $sort, $orientation, $request){
+        if($sort != 'lastOrder') {
+            return $query->orderBy('users.' . $sort, $orientation)->get();
+        }else{
+            //TODO да-да, я знаю)
+            //Сортировка по последнему заказу
+            $user_ids = $query->get()->pluck('id')->all();
+            $users = $this->whereIn('id', $user_ids);
+            $users->orderBy('id', $orientation);
+            return $users->get();
+        }
+    }
+
+    public function scopeWithFilter($query, Request $request, $filter, $sort = 'id', $orientation = 'DESC')
+    {
+        switch ($filter){
+            case('salon'):
+                //Проверяем, фильтр по всем салонам или по конкретному
+                if($request->salon_id != 'all') {
+                    $query->leftJoin('user_salon', 'user_salon.user_id', 'users.id')
+                        ->where('user_salon.is_client', true)
+                        ->where('user_salon.user_id', '!=', Auth()->id())
+                        ->where('user_salon.salon_id', $request->salon_id);
+                }else{
+                    //Если все салоны
+                    if(!$this->isJoined($query, 'user_salon')) {
+                        $query->leftJoin('user_salon', 'user_salon.user_id', 'users.id');
+                    }
+                    $query->where('user_salon.is_client', true)
+                        ->where('user_salon.user_id', '!=', Auth()->id())
+                        ->whereIn('user_salon.salon_id', Auth()->user()->salons->pluck('id')->all());
+                }
+
+            case 'search':
+                $query->where('users.name', 'LIKE', '%'.$request->search.'%');
+        }
+        return $this->filterSort($query, $sort, $orientation, $request);
+    }
+
 }
