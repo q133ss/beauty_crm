@@ -32,6 +32,7 @@ Route::middleware('permission')->middleware('verified')->group(function (){
     Route::post('/orders/{id}/status', [App\Http\Controllers\OrdersController::class, 'updateStatus'])->name('orders.status.change');
     Route::resource('orders', App\Http\Controllers\OrdersController::class)->except('delete');
 
-    Route::resource('finances', App\Http\Controllers\FinanceController::class);
+    Route::get('finances/{type}', [App\Http\Controllers\FinanceController::class, 'detail'])->whereIn('type', ['incomes', 'expenses']);
+    Route::resource('finances', App\Http\Controllers\FinanceController::class)->except('show', 'destroy');
 
 });

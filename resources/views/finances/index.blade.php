@@ -11,7 +11,7 @@
                     @endforeach
                 </ul>
                 <a href="#" class="btn btn-outline-success">Добавить доход</a>
-                <a href="#" class="btn btn-outline-info">Все доходы</a>
+                <a href="/finances/incomes" class="btn btn-outline-info">Все доходы</a>
             </div>
         </div>
         <div class="col">
@@ -23,7 +23,7 @@
                     @endforeach
                 </ul>
                 <a href="#" class="btn btn-outline-danger">Добавить расход</a>
-                <a href="#" class="btn btn-outline-info">Все расходы</a>
+                <a href="/finances/expenses" class="btn btn-outline-info">Все расходы</a>
             </div>
         </div>
     </div>
