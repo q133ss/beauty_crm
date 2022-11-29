@@ -6,7 +6,7 @@
             <div class="rounded bg-white p-4">
                 <h3 class="text-center">Доходы</h3>
                 <ul class="list-group mb-2">
-                    @foreach($incomes->take(5) as $income)
+                    @foreach(App\Models\Income::takeLastMonth(Auth()->id())->take(5) as $income)
                     <li class="list-group-item" data-toggle="tooltip" data-placement="top" title="{{$income->type}}"><a href="#" class="d-flex justify-content-between"><span class="text-success">+{{$income->sum}}₽</span> <date>{{$income->getDate()}}</date></a></li>
                     @endforeach
                 </ul>
@@ -18,7 +18,7 @@
             <div class="rounded bg-white p-4">
                 <h3 class="text-center">Расходы</h3>
                 <ul class="list-group mb-2">
-                    @foreach($expenses->take(5) as $expense)
+                    @foreach(App\Models\Expense::takeLastMonth(Auth()->id())->take(5) as $expense)
                     <li class="list-group-item" data-toggle="tooltip" data-placement="top" title="{{$expense->type}}"><a href="#" class="d-flex justify-content-between"><span class="text-danger">-{{$expense->sum}}₽</span> <date>{{$expense->getDate()}}</date></a></li>
                     @endforeach
                 </ul>
@@ -30,11 +30,11 @@
 
     <div class="row bg-white rounded p-4 mt-4">
         <div class="col text-center">
-            За последние 30 дней вы заработали: <strong>{{$income->sum('sum')}} </strong> ₽
+            За последние 30 дней вы заработали: <strong>{{App\Models\Income::takeLastMonth(Auth()->id())->sum('sum')}} </strong> ₽
         </div>
 
         <div class="col text-center">
-            За последние 30 дней вы потратили: <strong>{{$expense->sum('sum')}} </strong> ₽
+            За последние 30 дней вы потратили: <strong>{{App\Models\Expense::takeLastMonth(Auth()->id())->sum('sum')}} </strong> ₽
         </div>
     </div>
 
@@ -52,7 +52,6 @@
 
     <div class="bg-white rounded p-4 mt-4">
         <h3 class="w-100 text-center mb-4">Статистика за все время</h3>
-
         <table class="table table-bordered">
             <thead>
             <tr>
@@ -70,46 +69,57 @@
             </tr>
             </thead>
             <tbody>
+
+            @php $incomeCounter = 0; @endphp
+            @php $expenseCounter = 0; @endphp
+            @foreach($incomeArr as $key => $income)
             <tr>
                 <td>
-                    Январь, 2022
+                    {{App\Models\Income::getMonth(mb_substr($key,0,2)). ', ' .mb_substr($key,3,4)}}
                 </td>
                 <td class="text-success">
-                    107.000 ₽
-                    <i class="fa fa-arrow-up"></i>
+                    {{collect($income)->sum('sum')}} ₽
+
+                    @php
+                       $incomeCounter++;
+                       $current = $key;
+                       $keys = array_keys($incomeArr);
+                       $ordinal = (array_search($current,$keys)+1)%count($keys);
+                       $next = $keys[$ordinal];
+
+                       $nextSum = collect($incomeArr[$next])->sum('sum');
+                    @endphp
+
+                    @if($incomeCounter != count($keys))
+                        @if(collect($income)->sum('sum') < $nextSum)
+                            <i class="fa fa-arrow-down text-warning"></i>
+                        @else
+                            <i class="fa fa-arrow-up"></i>
+                        @endif
+                    @endif
                 </td>
                 <td class="text-danger">
-                    75.000 ₽
-                    <i class="fa fa-arrow-up"></i>
+                    @if(array_key_exists($key, App\Models\Expense::groupByMonth(Auth()->id())->toArray()))
+                        {{App\Models\Expense::groupByMonth(Auth()->id())[$key]->sum('sum')}} ₽
+                        @php
+                            $expenseCounter++;
+                            $expenseKeys = array_keys(App\Models\Expense::groupByMonth(Auth()->id())->toArray());
+                            $expenseOrdinal = (array_search($current,$expenseKeys)+1)%count($expenseKeys);
+                            $expenseNext = $expenseKeys[$expenseOrdinal];
+                        @endphp
+                        @if($expenseCounter != count($expenseKeys))
+                            @if(App\Models\Expense::groupByMonth(Auth()->id())[$expenseNext]->sum('sum') < App\Models\Expense::groupByMonth(Auth()->id())[$key]->sum('sum'))
+                            <i class="fa fa-arrow-up"></i>
+                            @else
+                                <i class="fa fa-arrow-down text-warning"></i>
+                            @endif
+                        @endif
+                    @else
+                        0 ₽
+                    @endif
                 </td>
             </tr>
-
-            <tr>
-                <td>
-                    Декабрь, 2021
-                </td>
-                <td class="text-success">
-                    101.000 ₽
-                    <i class="fa fa-arrow-down text-danger"></i>
-                </td>
-
-                <td class="text-danger">
-                    70.000 ₽
-                    <i class="fa fa-arrow-up"></i>
-                </td>
-            </tr>
-
-            <tr>
-                <td>
-                    Ноябрь, 2021
-                </td>
-                <td class="text-success">
-                    170.000 ₽
-                </td>
-                <td class="text-danger">
-                    35.000 ₽
-                </td>
-            </tr>
+            @endforeach
             </tbody>
         </table>
     </div>
@@ -121,9 +131,11 @@
             $('[data-toggle="tooltip"]').tooltip()
 
             var incomeData = {
-                //должны получить сумму каждой категории
                 datasets: [{
-                    data: [{{$incomes->where('type', 'Продажа услуги')->sum('sum')}}, {{$incomes->where('type', 'Другое')->sum('sum')}}],
+                    data: [
+                        {{App\Models\Income::takeLastMonth(Auth()->id())->where('type', 'Продажа услуги')->sum('sum')}},
+                        {{App\Models\Income::takeLastMonth(Auth()->id())->where('type', 'Другое')->sum('sum')}}
+                    ],
                     backgroundColor: [
                         'rgba(255, 99, 132, 0.5)',
                         'rgba(54, 162, 235, 0.5)',
@@ -152,7 +164,11 @@
             var expensesData = {
                 //должны получить сумму каждой категории
                 datasets: [{
-                    data: [{{$expense->where('type', 'аренда')->sum('sum')}}, {{$expense->where('type', 'курсы')->sum('sum')}}, {{$expense->where('type', 'материалы')->sum('sum')}}, {{$expense->where('type', 'другое')->sum('sum')}}],
+                    data: [
+                            {{App\Models\Expense::takeLastMonth(Auth()->id())->where('type', 'аренда')->sum('sum')}},
+                            {{App\Models\Expense::takeLastMonth(Auth()->id())->where('type', 'курсы')->sum('sum')}},
+                            {{App\Models\Expense::takeLastMonth(Auth()->id())->where('type', 'материалы')->sum('sum')}},
+                            {{App\Models\Expense::takeLastMonth(Auth()->id())->where('type', 'другое')->sum('sum')}}],
                     backgroundColor: [
                         'rgba(255, 99, 132, 0.5)',
                         'rgba(54, 162, 235, 0.5)',

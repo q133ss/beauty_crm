@@ -14,10 +14,16 @@ class FinanceController extends Controller
      */
     public function index()
     {
-        $user = Auth()->user()->load('incomes', 'expenses');
-        $expenses = $user->expenses->take(30);
-        $incomes = $user->incomes->take(30);
-        return view('finances.index', compact('expenses', 'incomes'));
+        $incomeArr = \App\Models\Income::groupByMonth(Auth()->id())->toArray();
+//        foreach ($arr as $k => $a){
+//            $current = $k;
+//            $keys = array_keys($arr);
+//            $ordinal = (array_search($current,$keys)+1)%count($keys);
+//            $next = $keys[$ordinal];
+//            dd($arr,$k, $next);
+//        }
+        //
+        return view('finances.index', compact('incomeArr'));
     }
 
     /**
