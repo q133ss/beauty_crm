@@ -32,4 +32,6 @@ Route::middleware('permission')->middleware('verified')->group(function (){
     Route::post('/orders/{id}/status', [App\Http\Controllers\OrdersController::class, 'updateStatus'])->name('orders.status.change');
     Route::resource('orders', App\Http\Controllers\OrdersController::class)->except('delete');
 
+    Route::resource('finances', App\Http\Controllers\FinanceController::class);
+
 });

@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->string('type');
             $table->double('sum');
-            $table->date('date');
+            $table->date('date')->default(now());
             $table->foreignId('user_id');
             $table->timestamps();
         });

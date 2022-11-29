@@ -226,4 +226,14 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->filterSort($query, $sort, $orientation, $request);
     }
 
+    public function incomes()
+    {
+        return $this->hasMany(Income::class, 'user_id', 'id')->orderBy('date', 'DESC');
+    }
+
+    public function expenses()
+    {
+        return $this->hasMany(Expense::class, 'user_id', 'id')->orderBy('date', 'DESC');
+    }
+
 }

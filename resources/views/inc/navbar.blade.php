@@ -62,19 +62,11 @@
         </a>
     </li>
 
-
     <li class="nav-item">
-        <a class="nav-link" data-toggle="collapse" href="#finance-menu" aria-expanded="false" aria-controls="ui-basic">
-            <i class="icon-disc menu-icon"></i>
+        <a class="nav-link" href="{{route('finances.index')}}">
+            <i class="icon-box menu-icon"></i>
             <span class="menu-title">Финансы</span>
-            <i class="menu-arrow"></i>
         </a>
-        <div class="collapse" id="finance-menu">
-            <ul class="nav flex-column sub-menu">
-                <li class="nav-item"> <a class="nav-link" href="pages/ui-features/buttons.html">Доходы</a></li>
-                <li class="nav-item"> <a class="nav-link" href="pages/ui-features/typography.html">Расходы</a></li>
-            </ul>
-        </div>
     </li>
 
     <li class="nav-item">

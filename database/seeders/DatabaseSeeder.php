@@ -273,5 +273,26 @@ class DatabaseSeeder extends Seeder
             'post_id' => 1,
             'is_client' => false
         ]);
+
+        //Finances
+        $expenses_types = ['аренда', 'материалы', 'курсы', 'другое'];
+
+        for($i = 0; $i<100; $i++){
+            \App\Models\Income::create([
+                'type' => rand(1,2),
+                'sum' => rand(499.0, 3500.0),
+                'date' => Carbon::now()->subDays(rand(1,256)),
+                'user_id' => 1
+            ]);
+
+            if($i < 70) {
+                \App\Models\Expense::create([
+                    'type' => $expenses_types[rand(0, 3)],
+                    'sum' => rand(499.0, 3500.0),
+                    'date' => Carbon::now()->subDays(rand(1, 256)),
+                    'user_id' => 1
+                ]);
+            }
+        }
     }
 }
