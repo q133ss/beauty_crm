@@ -35,4 +35,5 @@ Route::middleware('permission')->middleware('verified')->group(function (){
     Route::get('finances/{type}', [App\Http\Controllers\FinanceController::class, 'detail'])->whereIn('type', ['incomes', 'expenses']);
     Route::resource('finances', App\Http\Controllers\FinanceController::class)->except('show', 'destroy');
 
+    Route::get('settings', [App\Http\Controllers\SettingsController::class, 'index'])->name('settings.index');
 });

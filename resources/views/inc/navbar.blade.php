@@ -84,16 +84,9 @@
     </li>
 
     <li class="nav-item">
-        <a class="nav-link" data-toggle="collapse" href="#settings-menu" aria-expanded="false" aria-controls="ui-basic">
-            <i class="icon-disc menu-icon"></i>
+        <a class="nav-link" href="{{route('settings.index')}}">
+            <i class="icon-box menu-icon"></i>
             <span class="menu-title">Настройки</span>
-            <i class="menu-arrow"></i>
         </a>
-        <div class="collapse" id="settings-menu">
-            <ul class="nav flex-column sub-menu">
-                <li class="nav-item"> <a class="nav-link" href="pages/ui-features/buttons.html">Салон</a></li>
-                <li class="nav-item"> <a class="nav-link" href="pages/ui-features/typography.html">Аккаунт</a></li>
-            </ul>
-        </div>
     </li>
 </ul>
