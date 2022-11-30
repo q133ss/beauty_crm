@@ -10,6 +10,8 @@ class Income extends Model
 {
     use HasFactory;
 
+    protected $guarded = [];
+
     public function getDate()
     {
         return Carbon::parse($this->date)->format('d-m-Y');
@@ -17,7 +19,7 @@ class Income extends Model
 
     public static function takeLastMonth($user_id)
     {
-        return self::where('user_id', $user_id)->where('date', '>', now()->subMonth())->get();
+        return self::where('user_id', $user_id)->where('date', '>', now()->subMonth())->orderBy('date','DESC')->get();
     }
 
     public static function groupByMonth($user_id)

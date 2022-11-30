@@ -10,7 +10,7 @@
                     <li class="list-group-item" data-toggle="tooltip" data-placement="top" title="{{$income->type}}"><a href="#" class="d-flex justify-content-between"><span class="text-success">+{{$income->sum}}₽</span> <date>{{$income->getDate()}}</date></a></li>
                     @endforeach
                 </ul>
-                <a href="#" class="btn btn-outline-success">Добавить доход</a>
+                <a href="{{route('finances.create', 'type=incomes')}}" class="btn btn-outline-success">Добавить доход</a>
                 <a href="/finances/incomes" class="btn btn-outline-info">Все доходы</a>
             </div>
         </div>
@@ -22,7 +22,7 @@
                     <li class="list-group-item" data-toggle="tooltip" data-placement="top" title="{{$expense->type}}"><a href="#" class="d-flex justify-content-between"><span class="text-danger">-{{$expense->sum}}₽</span> <date>{{$expense->getDate()}}</date></a></li>
                     @endforeach
                 </ul>
-                <a href="#" class="btn btn-outline-danger">Добавить расход</a>
+                <a href="{{route('finances.create', 'type=expenses')}}" class="btn btn-outline-danger">Добавить расход</a>
                 <a href="/finances/expenses" class="btn btn-outline-info">Все расходы</a>
             </div>
         </div>

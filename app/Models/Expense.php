@@ -10,6 +10,8 @@ class Expense extends Model
 {
     use HasFactory;
 
+    protected $guarded = [];
+
     public function getDate()
     {
         return Carbon::parse($this->date)->format('d-m-Y');
