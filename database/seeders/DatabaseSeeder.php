@@ -294,5 +294,27 @@ class DatabaseSeeder extends Seeder
                 ]);
             }
         }
+
+        $settings = [
+            [
+                'key' => 'sleep_time',
+                'value' => '60',
+                'user_id' => 1
+            ],
+            [
+                'key' => 'telegram_text',
+                'value' => 'Здравствуйте {name}, вы давно не пользовались нашими услугами. Мы предлогаем вам скидку в размере 20% на следующий заказ по промокоду «wellcomeback». С уважением, салон красоты {salon_name}',
+                'user_id' => 1
+            ],
+            [
+                'key' => 'push_text',
+                'value' => 'Вы давно не пользовались нашими услугами. Мы предлогаем вам скидку в размере 20% на следующий заказ',
+                'user_id' => 1
+            ],
+        ];
+
+        foreach ($settings as $setting){
+            \App\Models\Setting::create($setting);
+        }
     }
 }

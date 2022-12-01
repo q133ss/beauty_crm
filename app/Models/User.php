@@ -236,4 +236,24 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasMany(Expense::class, 'user_id', 'id')->orderBy('date', 'DESC');
     }
 
+    public function settings()
+    {
+        return $this->hasMany(Setting::class, 'user_id', 'id');
+    }
+
+    public function getSetting($key)
+    {
+        return $this->settings->where('key', $key)->pluck('value')->first();
+    }
+
+    public function updateSetting($key, $value)
+    {
+        if($this->settings->where('key', $key)->first()) {
+            $setting = $this->settings->where('key', $key)->first();
+        }else{
+            $setting = Setting::create(['key' => $key, 'value' => $value, 'user_id' => $this->id]);
+        }
+        return $setting->update(['value' => $value]);
+    }
+
 }

@@ -36,4 +36,5 @@ Route::middleware('permission')->middleware('verified')->group(function (){
     Route::resource('finances', App\Http\Controllers\FinanceController::class)->except('show', 'destroy');
 
     Route::get('settings', [App\Http\Controllers\SettingsController::class, 'index'])->name('settings.index');
+    Route::post('settings', [App\Http\Controllers\SettingsController::class, 'update'])->name('settings.update');
 });
