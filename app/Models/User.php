@@ -256,4 +256,23 @@ class User extends Authenticatable implements MustVerifyEmail
         return $setting->update(['value' => $value]);
     }
 
+    public function getStuffPosts()
+    {
+        return StuffPost::whereIn('salon_id',$this->salons->pluck('id')->all())->get();
+    }
+
+    public function getSalonPost($salon_id)
+    {
+        if($this->checkSalon($salon_id)){
+            return $this->leftJoin('user_salon', 'user_salon.user_id', 'users.id')
+                ->where('users.id', $this->id)
+                ->where('user_salon.salon_id', $salon_id)
+                ->leftJoin('stuff_posts', 'stuff_posts.id', 'user_salon.post_id')
+                ->pluck('stuff_posts.name')
+                ->first();
+        }else{
+            return 'Ошибка';
+        }
+    }
+
 }

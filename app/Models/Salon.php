@@ -29,4 +29,9 @@ class Salon extends Model
     {
         return $this->hasMany(Record::class, 'salon_id', 'id');
     }
+
+    public function employees()
+    {
+        return $this->belongsToMany(User::class, 'user_salon');
+    }
 }

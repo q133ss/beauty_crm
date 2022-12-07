@@ -28,6 +28,10 @@ Route::middleware('permission')->middleware('verified')->group(function (){
     Route::post('/clients/{filter}/{sort?}/{orientation?}', [App\Http\Controllers\ClientController::class, 'filter']);
     Route::resource('clients', App\Http\Controllers\ClientController::class);
 
+    Route::get('salons/get-usr/{salon_id}/{user_id}', [App\Http\Controllers\SalonController::class, 'getUser'])->name('salons.get.user');
+    Route::post('salons/add-user', [App\Http\Controllers\SalonController::class, 'addUser'])->name('salons.add.user');
+    Route::resource('salons', App\Http\Controllers\SalonController::class);
+
     Route::get('/orders/filter/{field}/{sort?}/{orientation?}', [App\Http\Controllers\OrdersController::class, 'filter']);
     Route::post('/orders/{id}/status', [App\Http\Controllers\OrdersController::class, 'updateStatus'])->name('orders.status.change');
     Route::resource('orders', App\Http\Controllers\OrdersController::class)->except('delete');

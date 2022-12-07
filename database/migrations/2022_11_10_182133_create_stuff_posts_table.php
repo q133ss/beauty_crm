@@ -17,6 +17,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('slug')->comment('Создается автоматически!');
+            $table->foreignId('salon_id');
             $table->timestamps();
         });
     }

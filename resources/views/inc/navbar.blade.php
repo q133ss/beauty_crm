@@ -28,9 +28,13 @@
     </li>
 
     <li class="nav-item">
-        <a class="nav-link" href="index.html">
+        <a class="nav-link" href="{{route('salons.index')}}">
             <i class="icon-box menu-icon"></i>
+            @if(Auth()->user()->is_salon)
+            <span class="menu-title">Салоны</span>
+            @else
             <span class="menu-title">Салон</span>
+            @endif
         </a>
     </li>
 

@@ -255,7 +255,8 @@ class DatabaseSeeder extends Seeder
             StuffPost::create(
                 [
                     'name' => $post,
-                    'slug' => TranslitService::RusToLat($post)
+                    'slug' => TranslitService::RusToLat($post),
+                    'salon_id' => rand(1,2)
                 ]
             );
         }
