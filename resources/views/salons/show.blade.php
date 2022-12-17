@@ -4,14 +4,14 @@
     <meta name="csrf-token" content="{{ csrf_token() }}" />
 @endsection
 @section('content')
-    <form action="#">
+    <form action="{{route('salons.update', $salon->id)}}" method="POST">
+        @method('PUT')
         @csrf
-        <div class="row">
-            <div class="bg-white col rounded p-4">
+        <div class="bg-white rounded p-4">
                 <h3>Настройки салона</h3>
                 <div class="form-group">
                     <label for="name">Название</label>
-                    <input type="text" class="form-control" id="name" value="{{$salon->name}}">
+                    <input type="text" class="form-control" id="name" name="name" value="{{$salon->name}}">
                 </div>
 
                 <div class="form-group">
@@ -36,45 +36,65 @@
                 @endif
             </div>
 
-            <div class="bg-white col rounded p-4 ml-2">
-                <h3>Рабочее время</h3>
-                <div class="form-group">
-                    <label for="days">Рабочии дни(выберите дни в которые вы работаете)</label>
-                    <div id="days">
+        <div class="bg-white rounded p-4 mt-2">
+            <h3>Рабочее время</h3>
+            <div class="form-group">
+                <label for="days">Вы можете настроить рабочее время для каждого дня</label>
+                <div id="days">
+                    <div id="accordion">
                         @foreach($days as $day)
-                        <div class="form-check form-check-primary">
-                            <label class="form-check-label">
-                                <input type="checkbox" name="days[]" value="{{$day->id}}" class="form-check-input">
-                                {{$day->name}}
-                                <i class="input-helper"></i></label>
-                        </div>
+                            <div class="card">
+                                <div class="card-header" id="heading-{{$day->id}}">
+                                    <h5 class="mb-0">
+                                        <button type="button" class="btn btn-link" data-toggle="collapse" data-target="#collapse-{{$day->id}}" aria-expanded="true" aria-controls="collapse-{{$day->id}}">
+                                            {{$day->name}}
+                                        </button>
+                                    </h5>
+                                </div>
+
+                                <div id="collapse-{{$day->id}}" class="collapse" aria-labelledby="heading-{{$day->id}}" data-parent="#accordion">
+                                    <div class="card-body">
+                                        <h5>{{$day->name}}</h5>
+                                        <div class="form-group">
+                                            <label for="start">Начало рабочего дня</label>
+                                            <input type="time" value="{{$salon->workTime->where('day_id',$day->id)->pluck('start')->first()}}" class="form-control" name="start_time-{{$day->id}}">
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="start">Конец рабочего дня</label>
+                                            <input type="time" value="{{$salon->workTime->where('day_id',$day->id)->pluck('end')->first()}}" class="form-control" name="end_time-{{$day->id}}">
+                                        </div>
+
+                                        <div class="form-group" id="breakWrap-{{$day->id}}">
+                                            <label for="start">Перерыв</label>
+                                            <div class="text-danger mb-2" id="break_error-{{$day->id}}"></div>
+                                            @if(!empty(json_decode($salon->workTime->where('day_id',$day->id)->pluck('breaks')->first())))
+                                                @foreach(json_decode($salon->workTime->where('day_id',$day->id)->pluck('breaks')->first()) as $break)
+                                                    @php
+                                                        $uid = $day->id.uniqid().uniqid();
+                                                    @endphp
+                                                    <div class="input-group mb-3" id="break_{{$uid}}">
+                                                        <input type="time" name="start_break" value="{{collect(explode('-',$break))->first()}}" class="form-control" placeholder="Начало перерыва">
+                                                        <input type="time" name="stop_break" value="{{collect(explode('-',$break))->last()}}" class="form-control" placeholder="Конец перерыва">
+                                                        <div class="input-group-append">
+                                                            <button class="btn btn-outline-danger" type="button" onclick="removeBreak('{{$uid}}', '{{$day->id}}')">Удалить</button>
+                                                        </div>
+                                                    </div>
+                                                @endforeach
+                                            @endif
+                                        </div>
+                                        <button class="btn btn-outline-secondary" onclick="addBreak('{{$day->id}}')" type="button">Добавить</button>
+                                    </div>
+                                </div>
+                            </div>
                         @endforeach
                     </div>
                 </div>
-
-                <div class="form-group">
-                    <label for="start">Начало рабочего дня</label>
-                    <input type="time" class="form-control" name="start_time">
-                </div>
-
-                <div class="form-group">
-                    <label for="start">Конец рабочего дня</label>
-                    <input type="time" class="form-control" name="end_time">
-                </div>
-
-                <div class="form-group" id="breakWrap">
-                    <label for="start">Перерыв</label>
-                    <div class="input-group mb-3">
-                        <input type="text" name="start_break" class="form-control" placeholder="Начало перерыва">
-                        <input type="text" name="stop_break" class="form-control" placeholder="Конец перерыва">
-                        <div class="input-group-append">
-                            <button class="btn btn-outline-secondary" onclick="addBreak()" type="button">Добавить</button>
-                        </div>
-                    </div>
-                </div>
             </div>
+
         </div>
-        <div class="row bg-white p-4 rounded mt-2">
+
+        <div class="bg-white p-4 rounded mt-2">
             <h3>Сотрудники</h3>
             <table class="table">
                 <thead>
@@ -91,7 +111,7 @@
                         <td>{{$employee->getSalonPost($salon->id)}}</td>
                         <td>
                             <button onclick="editEmployees('{{$employee->id}}')" type="button" class="btn btn-outline-info">Изменить</button>
-                            <a href="#" class="btn btn-outline-danger">Удалить</a>
+                            <button onclick="deleteEmployee('{{$employee->id}}')" type="button" class="btn btn-outline-danger">Удалить</button>
                         </td>
                     </tr>
                 @endforeach
@@ -144,6 +164,50 @@
             </div>
         </div>
     </div>
+
+{{--    Edit user--}}
+    <div class="modal fade" id="employmentEditModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Изменить сотрудника</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <span class="error text-danger d-none" id="edit_error"></span>
+                    <div class="form-group">
+                        <label for="user_name">Имя</label>
+                        <input type="text" id="edit_name" class="form-control">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="user_phone">Телефон</label>
+                        <input type="text" id="edit_phone" class="form-control">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="user_phone">Email</label>
+                        <input type="text" id="edit_email" class="form-control">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="edit_post">Должность</label>
+                        <select id="edit_post" class="form-control">
+                            @foreach($posts as $post)
+                                <option value="{{$post->id}}">{{$post->name}}</option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="user-btn" onclick="" class="btn btn-primary">Изменить</button>
+                </div>
+            </div>
+        </div>
+    </div>
 {{--    end--}}
 @endsection
 @section('scripts')
@@ -157,21 +221,44 @@
         });
 
         let breakCounter = 0;
-        function addBreak(){
+        function addBreak(day_id){
             breakCounter++;
-            $('#breakWrap').append(
+            $('#breakWrap-'+day_id).append(
                 '<div class="input-group mb-3" id="break_'+breakCounter+'">'+
-                    '<input type="text" name="start_break" class="form-control" placeholder="Начало перерыва">'+
-                    '<input type="text" name="stop_break" class="form-control" placeholder="Конец перерыва">'+
+                    '<input type="time" name="start_break" class="form-control" placeholder="Начало перерыва">'+
+                    '<input type="time" name="stop_break" class="form-control" placeholder="Конец перерыва">'+
                     '<div class="input-group-append">'+
-                        '<button class="btn btn-outline-danger" onclick="removeBreak('+breakCounter+')" type="button">Удалить</button>'+
+                        '<button class="btn btn-outline-warning" type="button" onclick="saveBreak('+breakCounter+', '+day_id+')">Сохранить</button>'+
                     '</div>'+
                 '</div>'
             );
         }
 
-        function removeBreak(number){
-            $('#break_'+number).remove()
+        function removeBreak(number, day_id){
+            let breakRow = $('#break_'+number);
+            let start = breakRow.find('input[name="start_break"]').val();
+            let stop = breakRow.find('input[name="stop_break"]').val();
+            if(confirm('Подтвердите')){
+                $.ajax({
+                    url: '/salons/{{$salon->id}}/'+day_id+'/remove-break',
+                    type: "POST",
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    data: {
+                      'start':start,
+                      'stop':stop
+                    },
+                    success: (data) => {
+                        breakRow.remove()
+                    },
+                    error: function (err) {
+                        //
+                    }
+                });
+            }else{
+                return false;
+            }
         }
 
         function addUser(){
@@ -224,16 +311,110 @@
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
                 success: (data) => {
-                    $('#user_post > option').removeAttr('selected');
-                    $('#exampleModalLabel').html('Изменить сотрудника');
-                    $('#user_name').val(data.name);
-                    $('#user_phone').val(data.phone);
-                    $('#user_email').val(data.email);
-                    $('#user_post > option:contains("'+data.post+'")').attr("selected", "selected");
-                    $('#employmentModal').modal('show');
+                    $('#edit_post > option').removeAttr('selected');
+                    $('#edit_name').val(data.name);
+                    $('#edit_phone').val(data.phone);
+                    $('#edit_email').val(data.email);
+                    $('#edit_post > option:contains("'+data.post+'")').attr("selected", "selected");
+                    $('#user-btn').attr('onclick', 'updateUser('+data.id+')');
+                    $('#employmentEditModal').modal('show');
                 },
                 error: function (err) {
                     //
+                }
+            });
+        }
+
+        function updateEmployees(){
+            $.ajax({
+                url: '/salons/update/employees/{{$salon->id}}',
+                type: "GET",
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                success: (data) => {
+                    $('#employee-table').html(data);
+                },
+                error: function (err) {
+                    //
+                }
+            });
+        }
+
+        function updateUser(user_id){
+            let name = $('#edit_name').val();
+            let phone = $('#edit_phone').val();
+            let email = $('#edit_email').val();
+            let post_id = $('#edit_post').val();
+
+            $.ajax({
+                url: '/salons/update-usr/'+user_id,
+                type: "POST",
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                data: {
+                    'name': name,
+                    'phone': phone,
+                    'email': email,
+                    'post_id': post_id,
+                    'salon_id': {{$salon->id}}
+                },
+                success: (data) => {
+                    updateEmployees();
+                    $('#employmentEditModal').modal('hide');
+                },
+                error: function (err) {
+                    //
+                }
+            });
+        }
+
+        function deleteEmployee(user_id){
+            if(confirm('Вы уверены?')){
+                $.ajax({
+                    url: '/salons/delete/employee/'+user_id+'/{{$salon->id}}',
+                    type: "DELETE",
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    success: (data) => {
+                        updateEmployees();
+                    },
+                    error: function (err) {
+                        //
+                    }
+                });
+            }else{
+                return false;
+            }
+        }
+
+        function saveBreak(breakCounter, day_id){
+            let breakRow = $('#break_'+breakCounter);
+            let start = breakRow.find('input[name="start_break"]').val();
+            let stop = breakRow.find('input[name="stop_break"]').val();
+
+            $.ajax({
+                url: '/salons/{{$salon->id}}/'+day_id+'/add-break',
+                type: "POST",
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                data: {
+                    'start': start,
+                    'stop': stop
+                },
+                success: (data) => {
+                    breakRow.find('button').removeClass('btn-outline-warning');
+                    breakRow.find('button').addClass('btn-outline-danger');
+                    breakRow.find('button').html('Удалить');
+                    breakRow.find('button').attr('onclick', 'removeBreak('+breakCounter+')');
+                },
+                error: function (err) {
+                    $.each(err.responseJSON.errors, function (key, value) {
+                        $('#break_error-'+day_id).html(value[0]);
+                    });
                 }
             });
         }
@@ -242,5 +423,6 @@
     <script src="/js/jquery.mask.min.js"></script>
     <script>
         $('#user_phone').mask('+7(000)000-00-00')
+        $('#edit_phone').mask('+7(000)000-00-00')
     </script>
 @endsection

@@ -9,4 +9,9 @@ class Day extends Model
 {
     use HasFactory;
     protected $guarded = [];
+
+    public function getBreaks()
+    {
+        return json_decode($this->breaks);
+    }
 }

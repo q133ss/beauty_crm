@@ -17,7 +17,12 @@ class Salon extends Model
 
     public function workTime()
     {
-        return $this->hasOne(WorkTime::class, 'salon_id', 'id');
+        return $this->hasMany(WorkTime::class, 'salon_id', 'id');
+    }
+
+    public function getWorkTime($day_id)
+    {
+        return $this->workTime->where('day_id', $day_id)->first();
     }
 
     public function services()

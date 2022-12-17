@@ -136,11 +136,11 @@ class DatabaseSeeder extends Seeder
                 WorkTime::create([
                     'day_id' => $day,
                     'salon_id' => $salon->id,
-                    'start' => Carbon::createFromFormat('H:i', '09:00'),
-                    'end' => Carbon::createFromFormat('H:i', '18:00'),
+                    'start' => Carbon::createFromFormat('H:i', '09:00')->format('H:i'),
+                    'end' => Carbon::createFromFormat('H:i', '18:00')->format('H:i'),
                     'breaks' => json_encode([
-                        Carbon::createFromFormat('H:i', '12:00').'-'.Carbon::createFromFormat('H:i', '13:00'),
-                        Carbon::createFromFormat('H:i', '15:00').'-'.Carbon::createFromFormat('H:i', '15:10')
+                        Carbon::createFromFormat('H:i', '12:00')->format('H:i').'-'.Carbon::createFromFormat('H:i', '13:00')->format('H:i'),
+                        Carbon::createFromFormat('H:i', '15:00')->format('H:i').'-'.Carbon::createFromFormat('H:i', '15:10')->format('H:i')
                     ])
                 ]);
             }
