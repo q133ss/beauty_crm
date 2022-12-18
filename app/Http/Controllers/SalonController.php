@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\SalonController\AddBreakRequest;
 use App\Http\Requests\SalonController\AddUserRequest;
+use App\Http\Requests\SalonController\ChangeWorkTimeRequest;
 use App\Http\Requests\SalonController\UpdateRequest;
 use App\Http\Requests\SalonController\UpdateUserRequest;
 use App\Models\Day;
@@ -152,6 +153,18 @@ class SalonController extends Controller
         }else{
             abort(403);
         }
+    }
+
+    function changeWorkTime(ChangeWorkTimeRequest $request, $salon_id, $day_id){
+        if(Auth()->user()->checkSalon($salon_id)){
+            $workTime = WorkTime::where('salon_id', $salon_id)->where('day_id', $day_id)->first();
+            $workTime->start = $request->start;
+            $workTime->end = $request->end;
+            $workTime->save();
+        }else{
+            abort(403);
+        }
+        return true;
     }
 
     /**

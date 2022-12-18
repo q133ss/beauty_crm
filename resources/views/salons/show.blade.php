@@ -55,14 +55,15 @@
                                 <div id="collapse-{{$day->id}}" class="collapse" aria-labelledby="heading-{{$day->id}}" data-parent="#accordion">
                                     <div class="card-body">
                                         <h5>{{$day->name}}</h5>
+                                        <div class="text-danger" id="day_error_{{$day->id}}"></div>
                                         <div class="form-group">
                                             <label for="start">Начало рабочего дня</label>
-                                            <input type="time" value="{{$salon->workTime->where('day_id',$day->id)->pluck('start')->first()}}" class="form-control" name="start_time-{{$day->id}}">
+                                            <input type="time" id="day_start_time-{{$day->id}}" onchange="timeSave('{{$day->id}}')" value="{{$salon->workTime->where('day_id',$day->id)->pluck('start')->first()}}" class="form-control" name="start_time-{{$day->id}}">
                                         </div>
 
                                         <div class="form-group">
                                             <label for="start">Конец рабочего дня</label>
-                                            <input type="time" value="{{$salon->workTime->where('day_id',$day->id)->pluck('end')->first()}}" class="form-control" name="end_time-{{$day->id}}">
+                                            <input type="time" id="day_stop_time-{{$day->id}}" onchange="timeSave('{{$day->id}}')" value="{{$salon->workTime->where('day_id',$day->id)->pluck('end')->first()}}" class="form-control" name="end_time-{{$day->id}}">
                                         </div>
 
                                         <div class="form-group" id="breakWrap-{{$day->id}}">
@@ -74,8 +75,8 @@
                                                         $uid = $day->id.uniqid().uniqid();
                                                     @endphp
                                                     <div class="input-group mb-3" id="break_{{$uid}}">
-                                                        <input type="time" name="start_break" value="{{collect(explode('-',$break))->first()}}" class="form-control" placeholder="Начало перерыва">
-                                                        <input type="time" name="stop_break" value="{{collect(explode('-',$break))->last()}}" class="form-control" placeholder="Конец перерыва">
+                                                        <input type="time" disabled name="start_break" value="{{collect(explode('-',$break))->first()}}" class="form-control" placeholder="Начало перерыва">
+                                                        <input type="time" disabled name="stop_break" value="{{collect(explode('-',$break))->last()}}" class="form-control" placeholder="Конец перерыва">
                                                         <div class="input-group-append">
                                                             <button class="btn btn-outline-danger" type="button" onclick="removeBreak('{{$uid}}', '{{$day->id}}')">Удалить</button>
                                                         </div>
@@ -414,6 +415,31 @@
                 error: function (err) {
                     $.each(err.responseJSON.errors, function (key, value) {
                         $('#break_error-'+day_id).html(value[0]);
+                    });
+                }
+            });
+        }
+
+        function timeSave(day_id, time, val){
+            let start = $('#day_start_time-'+day_id).val();
+            let stop = $('#day_stop_time-'+day_id).val();
+
+            $.ajax({
+                url: '/salons/work/time/{{$salon->id}}/'+day_id,
+                type: "POST",
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                data: {
+                    'start': start,
+                    'end': stop
+                },
+                success: (data) => {
+                    $('#day_error_'+day_id).html('');
+                },
+                error: function (err) {
+                    $.each(err.responseJSON.errors, function (key, value) {
+                        $('#day_error_'+day_id).html(value[0]);
                     });
                 }
             });

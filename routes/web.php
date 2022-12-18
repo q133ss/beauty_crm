@@ -35,6 +35,7 @@ Route::middleware('permission')->middleware('verified')->group(function (){
     Route::post('salons/add-user', [App\Http\Controllers\SalonController::class, 'addUser'])->name('salons.add.user');
     Route::post('salons/{salon_id}/{day_id}/add-break', [App\Http\Controllers\SalonController::class, 'addBreak']);
     Route::post('salons/{salon_id}/{day_id}/remove-break', [App\Http\Controllers\SalonController::class, 'removeBreak']);
+    Route::post('salons/work/time/{salon_id}/{day_id}/', [App\Http\Controllers\SalonController::class, 'changeWorkTime']);
     Route::resource('salons', App\Http\Controllers\SalonController::class);
 
     Route::get('/orders/filter/{field}/{sort?}/{orientation?}', [App\Http\Controllers\OrdersController::class, 'filter']);
