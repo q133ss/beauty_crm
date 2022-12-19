@@ -221,6 +221,7 @@
             $('#break_'+id).remove()
         }
 
+        let stuff_counter = 0;
         function addUser(){
             let name = $('#user_name');
             let phone = $('#user_phone');
@@ -264,18 +265,19 @@
             }
 
             if(errors == 0) {
-                stuffs.append('<input type="hidden" name="stuff_name[]" value="' + name.val() + '">');
-                stuffs.append('<input type="hidden" name="stuff_phone[]" value="' + phone.val() + '">');
-                stuffs.append('<input type="hidden" name="stuff_email[]" value="' + email.val() + '">');
-                stuffs.append('<input type="hidden" name="stuff_post[]" value="' + post.val() + '">');
+                stuff_counter++;
+                stuffs.append('<input type="hidden" class="stuff_input_'+stuff_counter+'" name="stuff_name[]" value="' + name.val() + '">');
+                stuffs.append('<input type="hidden" class="stuff_input_'+stuff_counter+'" name="stuff_phone[]" value="' + phone.val() + '">');
+                stuffs.append('<input type="hidden" class="stuff_input_'+stuff_counter+'" name="stuff_email[]" value="' + email.val() + '">');
+                stuffs.append('<input type="hidden" class="stuff_input_'+stuff_counter+'" name="stuff_post[]" value="' + post.val() + '">');
 
                 $('#employee-table').append(
-                    '<tr>'+
+                    '<tr class="stuff_input_'+stuff_counter+'">'+
                     '<td>'+name.val()+'</td>'+
                     '<td>'+$('#user_post > option[value="'+post.val()+'"]').text()+'</td>'+
                     '<td>'+
                     '<a href="1" class="btn btn-outline-info">Изменить</a>'+
-                    '<a href="1" class="btn btn-outline-danger">Удалить</a>'+
+                    '<button type="button" onclick="removeStuff('+stuff_counter+')" class="btn btn-outline-danger">Удалить</button>'+
                     '</td>'+
                     '</tr>'
                 );
@@ -286,6 +288,10 @@
                 email.val('');
                 post.val('');
             }
+        }
+
+        function removeStuff(id){
+            $('.stuff_input_'+id).remove();
         }
     </script>
     <script src="/js/jquery.mask.min.js"></script>
