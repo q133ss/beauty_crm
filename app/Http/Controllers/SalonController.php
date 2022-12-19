@@ -42,7 +42,9 @@ class SalonController extends Controller
      */
     public function create()
     {
-        //
+        $days = Day::get();
+        $posts = Auth()->user()->getStuffPosts();
+        return view('salons.create', compact('days', 'posts'));
     }
 
     /**

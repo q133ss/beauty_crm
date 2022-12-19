@@ -20,6 +20,7 @@ return new class extends Migration
             $table->text('description');
             $table->boolean('prepayment')->default(false);
             $table->integer('percent')->default(0)->comment('Процент предоплаты');
+            $table->boolean('status')->default(1);
             $table->timestamps();
         });
     }

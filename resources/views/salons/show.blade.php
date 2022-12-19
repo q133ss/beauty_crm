@@ -9,6 +9,13 @@
         @csrf
         <div class="bg-white rounded p-4">
                 <h3>Настройки салона</h3>
+            @if ($errors->any())
+                <div class="alert alert-danger">
+                    @foreach ($errors->all() as $error)
+                        <p class="text-danger">{{ $error }}</p>
+                    @endforeach
+                </div>
+            @endif
                 <div class="form-group">
                     <label for="name">Название</label>
                     <input type="text" class="form-control" id="name" name="name" value="{{$salon->name}}">
@@ -34,6 +41,14 @@
                         <input type="text" class="form-control" name="percent" id="percent" value="{{$salon->percent}}">
                     </div>
                 @endif
+
+                <div class="form-group">
+                    <label for="status">Статус</label>
+                    <select name="status" id="status" class="form-control">
+                        <option value="1" @if($salon->status == 1) selected @endif>Открыт</option>
+                        <option value="0" @if($salon->status == 0) selected @endif>Закрыт</option>
+                    </select>
+                </div>
             </div>
 
         <div class="bg-white rounded p-4 mt-2">
