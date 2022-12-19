@@ -276,7 +276,7 @@
                     '<td>'+name.val()+'</td>'+
                     '<td>'+$('#user_post > option[value="'+post.val()+'"]').text()+'</td>'+
                     '<td>'+
-                    '<a href="1" class="btn btn-outline-info">Изменить</a>'+
+                    '<button type="button" onclick="editStuff('+stuff_counter+')" class="btn btn-outline-info">Изменить</button>'+
                     '<button type="button" onclick="removeStuff('+stuff_counter+')" class="btn btn-outline-danger">Удалить</button>'+
                     '</td>'+
                     '</tr>'
@@ -288,6 +288,25 @@
                 email.val('');
                 post.val('');
             }
+        }
+
+        function editStuff(id){
+            let name = $('.stuff_input_'+id+'[name="stuff_name[]"]').val();
+            let phone = $('.stuff_input_'+id+'[name="stuff_phone[]"]').val();
+            let email = $('.stuff_input_'+id+'[name="stuff_email[]"]').val();
+            let post = $('.stuff_input_'+id+'[name="stuff_post[]"]').val();
+
+            $('#edit_name').val(name);
+            $('#edit_phone').val(phone);
+            $('#edit_email').val(email);
+            $('#edit_post').val(post);
+            $('#user-btn').attr('onclick', 'updateStuff('+id+')');
+
+            $('#employmentEditModal').modal('show')
+        }
+
+        function updateStuff(id){
+            alert(id);
         }
 
         function removeStuff(id){
