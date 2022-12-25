@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\SalonController\AddBreakRequest;
 use App\Http\Requests\SalonController\AddUserRequest;
 use App\Http\Requests\SalonController\ChangeWorkTimeRequest;
+use App\Http\Requests\SalonController\StoreRequest;
 use App\Http\Requests\SalonController\UpdateRequest;
 use App\Http\Requests\SalonController\UpdateUserRequest;
 use App\Models\Day;
@@ -53,9 +54,9 @@ class SalonController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreRequest $request)
     {
-        //
+        dd($request);
     }
 
     /**

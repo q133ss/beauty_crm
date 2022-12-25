@@ -17,18 +17,18 @@
             @endif
             <div class="form-group">
                 <label for="name">Название</label>
-                <input type="text" class="form-control" id="name" name="name" value="">
+                <input type="text" class="form-control" id="name" name="name" value="{{old('name')}}">
             </div>
 
             <div class="form-group">
                 <label for="description">Описание</label>
-                <textarea name="description" class="form-control" id="description" cols="30" rows="10"></textarea>
+                <textarea name="description" class="form-control" id="description" cols="30" rows="10">{{old('description')}}</textarea>
             </div>
 
             <div class="form-group">
                 <div class="form-check form-check-primary">
                     <label class="form-check-label">
-                        <input type="checkbox" name="prepayment" id="prepayment" class="form-check-input" checked="">
+                        <input type="checkbox" name="prepayment" id="prepayment" class="form-check-input" @if(old('prepayment') == 'on') checked="" @endif>
                         Предоплата
                         <i class="input-helper"></i></label>
                 </div>
@@ -36,14 +36,14 @@
 
             <div class="form-group" id="percent_block">
                 <label for="percent">Процент предоплаты</label>
-                <input type="text" class="form-control" name="percent" id="percent">
+                <input type="text" class="form-control" value="{{old('percent')}}" name="percent" id="percent">
             </div>
 
             <div class="form-group">
                 <label for="status">Статус</label>
                 <select name="status" id="status" class="form-control">
-                    <option value="1" selected>Открыт</option>
-                    <option value="0">Закрыт</option>
+                    <option value="1" @if(old('status') == '1') selected @endif>Открыт</option>
+                    <option value="0" @if(old('status') == '') selected @endif>Закрыт</option>
                 </select>
             </div>
         </div>
@@ -70,18 +70,29 @@
                                         <div class="text-danger" id="day_error_{{$day->id}}"></div>
                                         <div class="form-group">
                                             <label for="start">Начало рабочего дня</label>
-                                            <input type="time" id="day_start_time-{{$day->id}}" onchange="timeSave('{{$day->id}}')" class="form-control" name="start_time-{{$day->id}}">
+                                            <input type="time" id="day_start_time-{{$day->id}}" onchange="timeSave('{{$day->id}}')" class="form-control" name="start_time-{{$day->id}}" value="{{old('start_time-'.$day->id)}}">
                                         </div>
 
                                         <div class="form-group">
                                             <label for="start">Конец рабочего дня</label>
-                                            <input type="time" id="day_stop_time-{{$day->id}}" onchange="timeSave('{{$day->id}}')" class="form-control" name="end_time-{{$day->id}}">
+                                            <input type="time" id="day_stop_time-{{$day->id}}" onchange="timeSave('{{$day->id}}')" class="form-control" name="end_time-{{$day->id}}" value="{{old('end_time-'.$day->id)}}">
                                         </div>
 
                                         <div class="form-group" id="breakWrap-{{$day->id}}">
                                             <label for="start">Перерыв</label>
                                             <div class="text-danger mb-2" id="break_error-{{$day->id}}"></div>
                                         </div>
+                                        @if(old('start_break_'.$day->id) != null)
+                                        @foreach(old('start_break_'.$day->id) as $key => $break)
+                                            <div class="input-group mb-3" id="break_{{$key}}562">
+                                                <input type="time" value="{{$break}}" name="start_break_{{$day->id}}[]" class="form-control" placeholder="Начало перерыва">
+                                                <input type="time" value="{{old('stop_break_'.$day->id)[$key]}}" name="stop_break_{{$day->id}}[]" class="form-control" placeholder="Конец перерыва">
+                                                <div class="input-group-append">
+                                                    <button class="btn btn-outline-danger" type="button" onclick="removeBreak('{{$key}}562')">Удалить</button>
+                                                </div>
+                                            </div>
+                                        @endforeach
+                                        @endif
                                         <button class="btn btn-outline-secondary" onclick="addBreak('{{$day->id}}')" type="button">Добавить</button>
                                     </div>
                                 </div>
@@ -104,7 +115,18 @@
                 </tr>
                 </thead>
                 <tbody id="employee-table">
-
+                    @if(old('stuff_name') != null)
+                        @foreach(old('stuff_name') as $key => $name)
+                        <tr class="stuff_input_'{{$key}}257'">
+                            <td>{{$name}}</td>
+                            <td>{{$posts[old('stuff_post')[$key]-1]->name}}</td>
+                            <td>
+                                <button type="button" onclick="editStuff('{{$key}}257')" class="btn btn-outline-info">Изменить</button>
+                                <button type="button" onclick="removeStuff('{{$key}}257')" class="btn btn-outline-danger">Удалить</button>
+                            </td>
+                        </tr>
+                        @endforeach
+                    @endif
                 </tbody>
             </table>
             <button type="button" class="btn btn-outline-info" data-toggle="modal" data-target="#employmentModal">Добавить сотрудника</button>
